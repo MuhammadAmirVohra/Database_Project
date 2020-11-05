@@ -1,0 +1,62 @@
+body.signin-body {
+    
+    background-image: url('assets/back2.jpg') ;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+
+}
+
+
+.container.signin-container {
+    margin-top: 10%;
+}
+.container-flex.signup-container
+{
+    margin-top: 4.5rem;
+}
+.recaptcha {
+    margin-bottom: 1.1rem;
+}
+
+.card.signin-card {
+    background-color: #f7f7f7;
+    padding: 40px 0px 10px;
+    box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.5);
+    opacity: .85;
+}
+img.signin-img {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: auto;
+    padding: 0rem 2rem 2rem;
+    display: block;
+}
+
+button.signin-btn{
+    margin: auto;
+    font-size: 1.4rem;
+    width: 100%;
+    margin-bottom: .7rem;
+    
+}
+.create_new_account{
+    font-size: 1.3rem;
+    text-align: right;
+    display: block;
+    margin-top: 1.5rem;
+}
+.card-img-top {
+    width: 100%;
+    height: 15vw;
+    object-fit: cover;
+}
+
+.middle
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    margin: -100px 0 0 -150px;
+}
