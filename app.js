@@ -1,5 +1,7 @@
 
 const mongo_DB = require('mongoose');
+const mail = require('./utils/mail')
+const randNum = require('./utils/randomGen')
 const express = require('express');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
@@ -41,6 +43,7 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
+
 passport.use(new LocalStrategy(
     function(username, password, done) {
       Customer.findOne({ email: username }, function (err, user) {
@@ -65,6 +68,7 @@ app.use(function(req, res, next) {
     res.locals.error = req.flash("error");
     res.locals.success = req.flash("success");
     next();
+
 });
 
 app.get('/login', checkNotAuthenticated , (req,res) =>
@@ -75,6 +79,7 @@ app.get('/login', checkNotAuthenticated , (req,res) =>
 app.get("/loginfailed", checkNotAuthenticated ,function(req, res){
     if (!req.user){
       req.flash("error", "Email or Password is incorrect.");
+      
       res.redirect("/login");
     }
   });
@@ -88,6 +93,7 @@ app.post('/login',
   passport.authenticate('local', { failureRedirect: '/loginfailed' }),
   function(req, res) {
     req.flash("success", "Welcome " + req.user.name);
+    
     res.redirect('/info')
   });
 
@@ -98,7 +104,7 @@ app.get('/register', checkNotAuthenticated, (req,res)=>
 {
     res.render('signup');
 });
-
+user_email='';
 app.post('/register', checkNotAuthenticated, (req,res)=>
 {
     Customer.findOne({ email : req.body.email} , (err, Founded)=>
@@ -124,8 +130,11 @@ app.post('/register', checkNotAuthenticated, (req,res)=>
                     }
                     else
                     {
-                        req.flash("success", "Account Registered");
-                        res.redirect('/login');
+                        re
+                        q.flash("success", "Account Registered");
+                        //res.redirect('/login');
+                        user_email +=req.body.email;
+                        res.redirect('/verify');
                     }
                 }
         
@@ -141,6 +150,12 @@ app.post('/register', checkNotAuthenticated, (req,res)=>
 
     
 });
+
+app.get('/verify' , (req,res)=>{
+    mail(user_email,randNum(1,1000));
+   // res.render('/verify');
+    res.send('check your email')
+ })
 
 app.get('/info', checkAuthenticated, (req,res)=>
 {
