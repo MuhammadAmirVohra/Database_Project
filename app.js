@@ -73,6 +73,7 @@ app.use(function(req, res, next) {
 
 app.get('/login', checkNotAuthenticated , (req,res) =>
 {   
+    verification = false;
     res.render("signin");
 });
 
@@ -104,14 +105,25 @@ app.get('/register', checkNotAuthenticated, (req,res)=>
 {
     res.render('signup');
 });
-user_email='';
+
+Customer_Info = {};
+Code = 0;
+verification = false;
+Failed_Count = 0;
+
 app.post('/register', checkNotAuthenticated, (req,res)=>
 {
     Customer.findOne({ email : req.body.email} , (err, Founded)=>
     {
-        if(!Founded)
+        if(Founded)
         {
-            Customer.create(
+            req.flash("error", "Email is already Registered");
+            res.redirect('/login');
+        }
+        else
+        {   
+           
+            Customer_Info = 
                 {
                     name: req.body.fname + ' ' + req.body.lname,
                     city: req.body.city,
@@ -120,42 +132,65 @@ app.post('/register', checkNotAuthenticated, (req,res)=>
                     address: req.body.address,
                     password: req.body.pass,
                     email: req.body.email
-                },
-                function(err, data)
-                {
-                    if(err)
-                    {
-                        req.flash("error",err.message);
-                        res.redirect('/register');
-                    }
-                    else
-                    {
-                        re
-                        q.flash("success", "Account Registered");
-                        //res.redirect('/login');
-                        user_email +=req.body.email;
-                        res.redirect('/verify');
-                    }
-                }
+                };
+
+            Code = randNum(1000,9000);
+            mail(Customer_Info.email, Code);
+            verification = true;
+            res.redirect("/verify");
+                        
+        }
         
-            );        
-        }
-        else
-        {
-            req.flash("error", "Email is already Registered");
-            res.redirect('/login');
-        }
     });
 
 
     
 });
 
-app.get('/verify' , (req,res)=>{
-    mail(user_email,randNum(1,1000));
-   // res.render('/verify');
-    res.send('check your email')
- })
+app.get('/verify', checkVerification , (req,res)=>{
+
+    res.render('verify')
+});
+
+app.post('/verify', checkVerification, (req,res)=>
+{
+    if(req.body.code == Code)
+    {
+        Customer.create(Customer_Info, (err, Data)=>
+        {
+            if(err)
+            {
+                req.flash("error", err.message);
+                res.redirect('/verify');
+            }
+            else
+            {
+                verification = false;
+                req.flash("success", "Account Registered");
+                res.redirect('/login');
+            }
+        });
+    }
+    else
+    {
+        Failed_Count = Failed_Count + 1;
+        if(Failed_Count > 3)
+        {
+            Failed_Count = 0;
+            Code = randNum(1000,9000);
+            mail(Customer_Info.email, Code);
+            req.flash("error", "New Verification Code is Sent, check Email.");
+            res.redirect("/verify");
+
+        }
+        else
+        {
+            req.flash("error", "Wrong Verification Code");
+            res.redirect("/verify");
+        }
+    }
+
+});
 
 app.get('/info', checkAuthenticated, (req,res)=>
 {
@@ -181,11 +216,21 @@ app.post('/:id/delete', checkAuthenticated, (req,res)=>
 
 app.listen(5000, () =>
 {
+    
+    Customer_Info = {};
+    Code = 0;
+    verification = false;
     console.log("Server Started");
 });
 
 
+function checkVerification(req, res, next) {
+    if (verification) {
+        return next();
+    }
 
+    return res.redirect("/login");
+}
 
 function checkAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
@@ -197,9 +242,13 @@ function checkAuthenticated(req, res, next) {
 
 function checkNotAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
+        verification = false;
         return res.redirect("/");
     }
     next();
 }
 
 
+function getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min) ) + min;
+}

@@ -22,7 +22,9 @@ const mail = (user_email , code)=>
                 from:"daniyalhassan11081999@gmail.com",
                 to:user_email,
                 subject:'verify the account',
-                text:'your verification code : '+code
+                text:'your verification code : '+ code
+        
+                 
             }, function(err)
             {
                 if(err)
