@@ -9374,6 +9374,9 @@ div.cs-select span {
         position: relative;
         height: 200px;
     }
+    #tabs .tabs-nav a span {
+        visibility: hidden;
+    }
 }
 
 .feature-full-2col .f-hotel .image,
