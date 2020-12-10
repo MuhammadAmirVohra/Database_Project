@@ -14,13 +14,15 @@
     "nodemailer-smtp-transport": "^2.7.4",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
-    "passport-local-mongoose": "^6.0.1"
+    "passport-local-mongoose": "^6.0.1",
+    "validate": "^5.1.0",
+    "validator": "^13.5.2"
   },
   "devDependencies": {},
   "scripts": {
-        "start": "node app.js",
-        "dev": "nodemon app.js"
-    },
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MuhammadAmirVohra/Database_Project.git"
