@@ -232,13 +232,16 @@ app.post('/:id/delete', checkAuthenticated, (req,res)=>
     });
 });
 
-app.listen(5000, () =>
+
+var PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () =>
 {
     
     Customer_Info = {};
     Code = 0;
     verification = false;
-    console.log("Server Started");
+    console.log('Server Started at ', PORT);
 });
 
 
