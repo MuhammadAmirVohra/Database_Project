@@ -8,8 +8,8 @@ const mail = (user_email , code)=>
             port : 587 ,
             secure:false,
             auth:{
-                 user:'daniyalhassan11081999@gmail.com',
-                pass: 'avvrm3Id?'
+                 user:'royalroyalhotelhotel@gmail.com',
+                pass: 'royalhotel1'
             }
          }
          
@@ -19,7 +19,7 @@ const mail = (user_email , code)=>
         
         mailTranspote.sendMail(
             {
-                from:"daniyalhassan11081999@gmail.com",
+                from:"royalroyalhotelhotel@gmail.com",
                 to:user_email,
                 subject:'verify the account',
                 text:'your verification code : '+ code
