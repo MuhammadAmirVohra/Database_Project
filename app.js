@@ -1,7 +1,7 @@
 
 const mongo_DB = require('mongoose');
 const mail = require('./utils/mail')
-const randNum = require('./utils/randomGen')
+// const randNum = require('./utils/randomGen')
 const express = require('express');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');

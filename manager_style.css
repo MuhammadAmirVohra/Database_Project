@@ -1,0 +1,29 @@
+.row {
+    padding: 80px;
+}
+
+.jumbotron {
+    height: 200px;
+    background-color: lightgray;
+    text-align: center;
+}
+
+.jumbotron h1 {
+    padding-top: 50px;
+    text-align: center;
+    margin: auto;
+}
+
+.invoice_table {
+    overflow: hidden;
+    height: 200px;
+    overflow-y: scroll;
+}
+
+.table .fixed th {
+    top: 0;
+    z-index: 2;
+    position: sticky;
+    background-color: black;
+    color: white;
+}
