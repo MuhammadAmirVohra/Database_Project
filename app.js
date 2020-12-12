@@ -9,6 +9,9 @@ const pass = require('passport-local-mongoose');
 const bodyParser = require('body-parser');
 const app = express();
 const flash = require('connect-flash');
+const Customer = require('./db/Customer.js');
+
+
 
 app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 
@@ -27,22 +30,22 @@ mongo_DB.connection.off('error', () => {
 });
 
 
-var Customer_Schema = mongo_DB.Schema({
+// var Customer_Schema = mongo_DB.Schema({
     
-    email: { type: String, required: true, unique: true, lowercase: true },
-    name: String,
-    password: { type: String, required: true},
-    address : String,
-    city:String,
-    zip_code: Number,
-    gender: String
+//     email: { type: String, required: true, unique: true, lowercase: true },
+//     name: String,
+//     password: { type: String, required: true},
+//     address : String,
+//     city:String,
+//     zip_code: Number,
+//     gender: String
 
-});
+// });
 
 
-var Customer = mongo_DB.model('Customer', Customer_Schema);
+// var Customer = mongo_DB.model('Customer', Customer_Schema);
 
-Customer_Schema.plugin(pass);
+// Customer_Schema.plugin(pass);
 
 
 app.use(flash());

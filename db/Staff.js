@@ -37,6 +37,9 @@ const StaffSchema = new mongo_db.Schema({
                 throw new Error('Email is invalid')
             }
         }
+    },
+    department_id:{
+        type : mongo_db.Types.ObjectId, ref : 'Department'
     }
 })
 

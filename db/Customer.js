@@ -12,7 +12,7 @@ const pass = require('passport-local-mongoose')
 // CNIC =  42101-7898533-3
 // creditCard = mera ha nahi to kia karon lakin check karlon ga 
 var CustomerSchema = mongo_db.Schema({
-    cid :{type :Number ,required : true , unique : true},
+    // cid :{type :Number ,required : true , unique : true},
     name :{type :String ,required : true,trim: true },
     email: {
         type: String,

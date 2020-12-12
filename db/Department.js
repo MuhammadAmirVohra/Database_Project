@@ -9,7 +9,7 @@ const DepartmentSchema = new mongo_db.Schema({
     },
     mng_ssn :{
         type : mongo_db.Types.ObjectId,
-        ref: 'staff'
+        ref: 'Staff'
     }
 })
 

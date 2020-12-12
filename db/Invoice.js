@@ -31,6 +31,9 @@ const InvoiceSchema = new mongo_db.Schema({
                 throw new Error ("invoice type is neither credit nor debit")
             }
         }
+    },
+    department_id:{
+        type : mongo_db.Types.ObjectId, ref : 'Department'
     }
 })
 
