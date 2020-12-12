@@ -5,9 +5,9 @@ const Room = require("./Room")
 
 const ReservationSchema = new mongo_db.Schema({
     //one reservation may have multiple rooms
-    roomid : [{
+    roomid : {
         type:mongo_db.Types.ObjectId ,ref :'Room'
-    }],
+    },
     customerid :{
         type : mongo_db.Types.ObjectId ,
         ref : 'Customer'

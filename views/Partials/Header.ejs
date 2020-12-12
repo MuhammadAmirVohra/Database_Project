@@ -58,8 +58,11 @@
 							<li><a href="/services">Services</a></li>
 	
 							<li><a href="/contact">Contact</a></li>
-
+							<% if (user) {%>
+							<li><p><a href="/info" class="btn btn-primary btn-sm" style = "color : white;"><%= user.name %></a></p></li>
+							<% } else { %>
 							<li><p><a href="/login" class="btn btn-primary btn-sm" style = "color : white;">Sign In</a></p></li>
+							<%}%>
 						</ul>
 					</nav>
 				</div>

@@ -9,7 +9,7 @@ const JobSchema = new mongo_db.Schema({
     },
     lower_limit:{
         type : Number , 
-        validator : function(value)
+        validate(value)
         {
             if(value <0)
             {
@@ -18,7 +18,7 @@ const JobSchema = new mongo_db.Schema({
         }
     },uppper_limit:{
         type : Number , 
-        validator : function(value)
+        validate(value)
         {
             if(value <0)
             {

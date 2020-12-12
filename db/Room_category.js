@@ -8,7 +8,7 @@ const Category_schema = new mongo_db.Schema({
         type:String,
         trim:true,
         required:true,
-        validator:function(value){
+        validate(value){
             if(!value)
             {
                 throw new Error ("Invalid Name Type Of Category")
@@ -18,7 +18,7 @@ const Category_schema = new mongo_db.Schema({
     price :{
         type:Number,
         required:true,
-        validator:function(value)
+        validate(value)
         {
             if(value<0)
             {

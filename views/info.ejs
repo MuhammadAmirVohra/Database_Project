@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="bootstrap-4.5.3-dist/css/bootstrap-grid.min.css">
     <link rel="stylesheet" href="bootstrap-4.5.3-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
-    <title>Hello, world!</title>
+    <title>Profile</title>
   </head>
   <body class="signin-body">
     <%if(error && error.length>0){%>
@@ -31,13 +31,16 @@
        <br>
         Address : <%= user.address%>
        <br>
-        Gender : <%= user.gender%>
+        Credit Card : <%= user.credit_card%>
        <br>
-        City : <%= user.city%>
+        CNIC : <%= user.cnic%>
       <br>
-        Zip Code : <%= user.zip_code%>
+        Phone Number : <%= user.phone%>
        </p>
         <a href="/logout" class="btn btn-primary">Log Out</a>
+        <form action="/<%=user._id%>/update" method="post">
+        <button type="submit" class="btn btn-secondary">Update Account</button>  
+        </form>
         <form action="/<%=user._id%>/delete" method="post">
         <button type="submit" class="btn btn-danger">Delete Account</button>  
         </form>

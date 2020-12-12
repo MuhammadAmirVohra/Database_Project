@@ -10,7 +10,7 @@ const StaffSchema = new mongo_db.Schema({
     salary :{
         type:Number , 
         required : true,
-        validator : function(v)
+        validate(v)
         {
             if(v<0)
             {

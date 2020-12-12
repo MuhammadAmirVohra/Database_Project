@@ -48,6 +48,10 @@ mongo_DB.connection.off('error', () => {
 // Customer_Schema.plugin(pass);
 
 
+function randNum(min, max) {
+    return Math.floor(Math.random() * (max - min) ) + min;
+}
+
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -82,16 +86,16 @@ app.use(function(req, res, next) {
 
 
 app.get('/', (req, res) => {
-    res.render("index");
+    res.render("index", {user : req.user });
 });
 
 app.get('/contact', (req, res) => {
-    res.render("contact");
+    res.render("contact", {user : req.user});
 
 });
 
 app.get('/services', (req, res) => {
-    res.render("services");
+    res.render("services", {user : req.user});
 });
 
 
@@ -116,7 +120,7 @@ app.post('/login',
   function(req, res) {
     req.flash("success", "Welcome " + req.user.name);
     
-    res.redirect('/info')
+    res.redirect('/')
   });
 
 
@@ -147,12 +151,15 @@ app.post('/register', checkNotAuthenticated, (req,res)=>
             Customer_Info = 
                 {
                     name: req.body.fname + ' ' + req.body.lname,
-                    city: req.body.city,
-                    gender: req.body.gender,
-                    zip_code : req.body.zip,
+                    // city: req.body.city,
+                    // gender: req.body.gender,
+                    // zip_code : req.body.zip,
                     address: req.body.address,
                     password: req.body.pass,
-                    email: req.body.email
+                    email: req.body.email,
+                    phone : req.body.phone,
+                    cnic : req.body.cnic,
+                    credit_card : req.body.credit_card
                 };
 
             Code = randNum(1000,9000);
@@ -182,6 +189,7 @@ app.post('/verify', checkVerification, (req,res)=>
             if(err)
             {
                 req.flash("error", err.message);
+                console.log(err.message);
                 res.redirect('/verify');
             }
             else
@@ -222,7 +230,7 @@ app.get('/info', checkAuthenticated, (req,res)=>
 app.get('/logout', checkAuthenticated ,(req,res)=>
 {
     req.logout();
-    res.redirect('/login');
+    res.redirect('/');
 });
 
 app.post('/:id/delete', checkAuthenticated, (req,res)=>
@@ -234,6 +242,20 @@ app.post('/:id/delete', checkAuthenticated, (req,res)=>
             res.redirect('/logout');
     });
 });
+
+app.post('/:id/update', checkAuthenticated, (req,res)=>
+{
+    console.log(req.params.id);
+    // Customer.findByIdAndDelete(req.params.id, (err,Data)=>
+    // {
+    //         req.flash("success", "Account Deleted");
+    //         res.redirect('/logout');
+    // });
+    res.redirect("update", {user : req.user});
+});
+
+
+
 
 
 var PORT = process.env.PORT || 5000;
@@ -273,6 +295,3 @@ function checkNotAuthenticated(req, res, next) {
 }
 
 
-function getRndInteger(min, max) {
-    return Math.floor(Math.random() * (max - min) ) + min;
-}

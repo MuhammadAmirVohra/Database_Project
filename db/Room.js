@@ -36,7 +36,7 @@ const RoomSchema = new mongo_db.Schema({
         type :Number,
         unique:true,
         required:true,
-        validator:function(value){
+        validate(value){
             if(value === NaN)
             {
                 throw new Error("ROOM Id is NULL ");
