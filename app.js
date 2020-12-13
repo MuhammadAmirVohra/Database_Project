@@ -1,7 +1,6 @@
-
 const mongo_DB = require('mongoose');
 const mail = require('./utils/mail')
-// const randNum = require('./utils/randomGen')
+    // const randNum = require('./utils/randomGen')
 const express = require('express');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
@@ -13,6 +12,9 @@ const moment = require('moment');
 const Customer = require('./db/Customer.js');
 const room_category = require('./db/Room_category.js');
 const room = require('./db/Room.js');
+const reservation = require('./db/Reservation');
+const invoice = require('./db/Invoice');
+const department = require('./db/Department');
 
 app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 
@@ -21,7 +23,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(express.static(__dirname + "/public"));
-mongo_DB.connect('mongodb+srv://amir:amir@royal.naxnw.mongodb.net/royal?retryWrites=true&w=majority' , { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
+mongo_DB.connect('mongodb+srv://amir:amir@royal.naxnw.mongodb.net/royal?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
 
 mongo_DB.connection.on('connected', () => {
     console.log('Database Connected ! ');
@@ -31,95 +33,97 @@ mongo_DB.connection.off('error', () => {
 });
 
 
-room_array = [];
 
 
-room_category.find({}, (err, data) => {
-    var k = 0;
-    console.log(data.length);
+// room_array = [];
 
-    for(var i = 0; i < data.length; i++)
-    {
-        if(data[i].name == "Economy")
-        {
-            for(var j = 1; j <= 4; j++)
-            {
-                k += 100;
-                for(var z = k; z <= k+50; z++)
-                {
-                     room_array.push({
-                        room_number : z,
-                        category_id : data[i].id
-                    })
-                }
-            }
-        }
-    
-       else if(data[i].name == "Superior")
-        {
-            for(var j = 1; j <= 2; j++)
-            {
-                k += 100;
-                for(var z = k; z <= k+50; z++)
-                {
-                    room_array.push({
-                        room_number : z,
-                        category_id : data[i].id
-                    })
-                }
-            }
-        }
 
-        else if(data[i].name == "Luxury")
-        {
-            for(var j = 1; j <= 1; j++)
-            {
-                k += 100 ;
-                for(var z = k; z <= k+25; z++)
-                {
-                    room_array.push({
-                        room_number : z,
-                        category_id : data[i].id
-                    })
-                    
-                }
-            }
-        }
-        else
-        {
-            console.log("err");
-        }
-        
-    
-    
-    
-    
-    }
+// room_category.find({}, (err, data) => {
+//     var k = 0;
+//     console.log(data.length);
 
-    // console.log(room_array); 
-    room.init()
-    room.insertMany(room_array,(err)=>
-    {
-        
-        if (err)
-        {
-            console.log(err);
-        }
-        else
-        {
-            console.log("Added");
-        }
-       
-    });   
-    
-});
+//     for(var i = 0; i < data.length; i++)
+//     {
+//         if(data[i].name == "Economy")
+//         {
+//             for(var j = 1; j <= 4; j++)
+//             {
+//                 k += 100;
+//                 for(var z = k; z <= k+50; z++)
+//                 {
+//                      room_array.push({
+//                         room_number : z,
+//                         category_id : data[i].id
+//                     })
+//                 }
+//             }
+//         }
+
+//        else if(data[i].name == "Superior")
+//         {
+//             for(var j = 1; j <= 2; j++)
+//             {
+//                 k += 100;
+//                 for(var z = k; z <= k+50; z++)
+//                 {
+//                     room_array.push({
+//                         room_number : z,
+//                         category_id : data[i].id
+//                     })
+//                 }
+//             }
+//         }
+
+//         else if(data[i].name == "Luxury")
+//         {
+//             for(var j = 1; j <= 1; j++)
+//             {
+//                 k += 100 ;
+//                 for(var z = k; z <= k+25; z++)
+//                 {
+//                     room_array.push({
+//                         room_number : z,
+//                         category_id : data[i].id
+//                     })
+
+//                 }
+//             }
+//         }
+//         else
+//         {
+//             console.log("err");
+//         }
+
+
+
+
+
+//     }
+
+//     // console.log(room_array); 
+//     room.init()
+//     room.insertMany(room_array,(err)=>
+//     {
+
+//         if (err)
+//         {
+//             console.log(err);
+//         }
+//         else
+//         {
+//             console.log("Added");
+//         }
+
+//     });   
+
+// });
 
 
 
 
 
 // var Customer_Schema = mongo_DB.Schema({
-    
+
 //     email: { type: String, required: true, unique: true, lowercase: true },
 //     name: String,
 //     password: { type: String, required: true},
@@ -137,7 +141,7 @@ room_category.find({}, (err, data) => {
 
 
 function randNum(min, max) {
-    return Math.floor(Math.random() * (max - min) ) + min;
+    return Math.floor(Math.random() * (max - min)) + min;
 }
 
 app.use(flash());
@@ -147,14 +151,14 @@ app.use(passport.session());
 
 passport.use(new LocalStrategy(
     function(username, password, done) {
-      Customer.findOne({ email: username }, function (err, user) {
-        if (err) { return done(err); }
-        if (!user) { return done(null, false); }
-        if (user.password != password) { return done(null, false ); }
-        return done(null, user);
-      });
+        Customer.findOne({ email: username }, function(err, user) {
+            if (err) { return done(err); }
+            if (!user) { return done(null, false); }
+            if (user.password != password) { return done(null, false); }
+            return done(null, user);
+        });
     }
-  ));
+));
 
 passport.serializeUser(function(user, done) {
     done(null, user);
@@ -174,48 +178,46 @@ app.use(function(req, res, next) {
 
 
 app.get('/', (req, res) => {
-    res.render("index", {user : req.user });
+    res.render("index", { user: req.user });
 });
 
 app.get('/contact', (req, res) => {
-    res.render("contact", {user : req.user});
+    res.render("contact", { user: req.user });
 
 });
 
 app.get('/services', (req, res) => {
-    res.render("services", {user : req.user});
+    res.render("services", { user: req.user });
 });
 
 
 
-app.get('/login', checkNotAuthenticated , (req,res) =>
-{   
+app.get('/login', checkNotAuthenticated, (req, res) => {
     verification = false;
     res.render("signin");
 });
 
-app.get("/loginfailed", checkNotAuthenticated ,function(req, res){
-    if (!req.user){
-      req.flash("error", "Email or Password is incorrect.");
-      
-      res.redirect("/login");
+app.get("/loginfailed", checkNotAuthenticated, function(req, res) {
+    if (!req.user) {
+        req.flash("error", "Email or Password is incorrect.");
+
+        res.redirect("/login");
     }
-  });
+});
 
 
-app.post('/login', 
-  passport.authenticate('local', { failureRedirect: '/loginfailed' }),
-  function(req, res) {
-    req.flash("success", "Welcome " + req.user.name);
-    
-    res.redirect('/')
-  });
+app.post('/login',
+    passport.authenticate('local', { failureRedirect: '/loginfailed' }),
+    function(req, res) {
+        req.flash("success", "Welcome " + req.user.name);
+
+        res.redirect('/')
+    });
 
 
 
 
-app.get('/register', checkNotAuthenticated, (req,res)=>
-{
+app.get('/register', checkNotAuthenticated, (req, res) => {
     res.render('signup');
 });
 
@@ -224,84 +226,67 @@ Code = 0;
 verification = false;
 Failed_Count = 0;
 
-app.post('/register', checkNotAuthenticated, (req,res)=>
-{
-    Customer.findOne({ email : req.body.email} , (err, Founded)=>
-    {
-        if(Founded)
-        {
+app.post('/register', checkNotAuthenticated, (req, res) => {
+    Customer.findOne({ email: req.body.email }, (err, Founded) => {
+        if (Founded) {
             req.flash("error", "Email is already Registered");
             res.redirect('/login');
-        }
-        else
-        {   
-           
-            Customer_Info = 
-                {
-                    name: req.body.fname + ' ' + req.body.lname,
-                    // city: req.body.city,
-                    // gender: req.body.gender,
-                    // zip_code : req.body.zip,
-                    address: req.body.address,
-                    password: req.body.pass,
-                    email: req.body.email,
-                    phone : req.body.phone,
-                    cnic : req.body.cnic,
-                    credit_card : req.body.credit_card
-                };
+        } else {
 
-            Code = randNum(1000,9000);
+            Customer_Info = {
+                name: req.body.fname + ' ' + req.body.lname,
+                // city: req.body.city,
+                // gender: req.body.gender,
+                // zip_code : req.body.zip,
+                address: req.body.address,
+                password: req.body.pass,
+                email: req.body.email,
+                phone: req.body.phone,
+                cnic: req.body.cnic,
+                credit_card: req.body.credit_card
+            };
+
+            Code = randNum(1000, 9000);
             mail(Customer_Info.email, Code);
             verification = true;
             res.redirect("/verify");
-                        
+
         }
-        
+
     });
 
 
-    
+
 });
 
-app.get('/verify', checkVerification , (req,res)=>{
+app.get('/verify', checkVerification, (req, res) => {
 
     res.render('verify')
 });
 
-app.post('/verify', checkVerification, (req,res)=>
-{
-    if(req.body.code == Code)
-    {
-        Customer.create(Customer_Info, (err, Data)=>
-        {
-            if(err)
-            {
+app.post('/verify', checkVerification, (req, res) => {
+    if (req.body.code == Code) {
+        Customer.create(Customer_Info, (err, Data) => {
+            if (err) {
                 req.flash("error", err.message);
                 console.log(err.message);
                 res.redirect('/verify');
-            }
-            else
-            {
+            } else {
                 verification = false;
                 req.flash("success", "Account Registered");
                 res.redirect('/login');
             }
         });
-    }
-    else
-    {
+    } else {
         Failed_Count = Failed_Count + 1;
-        if(Failed_Count > 3)
-        {
+        if (Failed_Count > 3) {
             Failed_Count = 0;
-            Code = randNum(1000,9000);
+            Code = randNum(1000, 9000);
             mail(Customer_Info.email, Code);
             req.flash("error", "New Verification Code is Sent, check Email.");
             res.redirect("/verify");
 
-        }
-        else
-        {
+        } else {
             req.flash("error", "Wrong Verification Code");
             res.redirect("/verify");
         }
@@ -309,67 +294,59 @@ app.post('/verify', checkVerification, (req,res)=>
 
 });
 
-app.get('/info', checkAuthenticated, (req,res)=>
-{
-    res.render("info", {user : req.user});
+app.get('/info', checkAuthenticated, (req, res) => {
+    res.render("info", { user: req.user });
 });
 
 
-app.get('/logout', checkAuthenticated ,(req,res)=>
-{
+app.get('/logout', checkAuthenticated, (req, res) => {
     req.logout();
     res.redirect('/');
 });
 
-app.post('/:id/delete', checkAuthenticated, (req,res)=>
-{
+app.post('/:id/delete', checkAuthenticated, (req, res) => {
     console.log(req.params.id);
-    Customer.findByIdAndDelete(req.params.id, (err,Data)=>
-    {
-            req.flash("success", "Account Deleted");
-            res.redirect('/logout');
+    Customer.findByIdAndDelete(req.params.id, (err, Data) => {
+        req.flash("success", "Account Deleted");
+        res.redirect('/logout');
     });
 });
 
-app.post('/:id/update', checkAuthenticated, (req,res)=>
-{
+app.post('/:id/update', checkAuthenticated, (req, res) => {
     console.log(req.params.id);
     // Customer.findByIdAndDelete(req.params.id, (err,Data)=>
     // {
     //         req.flash("success", "Account Deleted");
     //         res.redirect('/logout');
     // });
-    res.redirect("update", {user : req.user});
+    res.redirect("update", { user: req.user });
 });
 
 
 
-app.post("/booking", (req,res)=>
-{
+app.post("/booking", checkAuthenticated, (req, res) => {
     // console.log(req.body.category);
     // console.log(req.body.start);
     // console.log(req.body.end);
-    var start = moment(req.body.start,'M/D/YYYY');
-    var end = moment(req.body.end,'M/D/YYYY');
+    var start = moment(req.body.start, 'M/D/YYYY');
+    var end = moment(req.body.end, 'M/D/YYYY');
     var diffDays = end.diff(start, 'days');
-    console.log(diffDays);
-    if (diffDays <= 0)
-    {
-        console.log("error");
-        req.flash("Invalid Date");
-        res.redirect("/");
-    }
-    else
-    {
-        console.log("Added");
+    // console.log(diffDays);
+    // if (diffDays <= 0) {
+    //     console.log("error");
+    //     req.flash("error", "Invalid Date");
+    //     res.redirect("/");
+    // } else {
+    //     console.log("Added");
+    //     req.flash("success", "Room is booked for " + diffDays + " Days");
+    //     res.redirect('/');
 
-        res.redirect('/');
-    
-    }
+    // }
     // req.flash("error", "Email or Password is incorrect.");
 
 
-    
+
+
 });
 
 
@@ -377,9 +354,8 @@ app.post("/booking", (req,res)=>
 
 var PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () =>
-{
-    
+app.listen(PORT, () => {
+
     Customer_Info = {};
     Code = 0;
     verification = false;
@@ -399,7 +375,7 @@ function checkAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
-
+    req.flash("You have to login first");
     return res.redirect("/login");
 }
 
@@ -410,5 +386,3 @@ function checkNotAuthenticated(req, res, next) {
     }
     next();
 }
-
-

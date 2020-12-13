@@ -2,28 +2,28 @@ const mongo_db = require("mongoose")
 const validator = require("validator")
 const Customer = require('./Customer.js')
 const Room = require("./Room")
+const invoice = require('./Invoice');
 
 const ReservationSchema = new mongo_db.Schema({
     //one reservation may have multiple rooms
-    roomid : {
-        type:mongo_db.Types.ObjectId ,ref :'Room'
+    roomid: {
+        type: mongo_db.Types.ObjectId,
+        ref: 'Room'
     },
-    customerid :{
-        type : mongo_db.Types.ObjectId ,
-        ref : 'Customer'
+    customerid: {
+        type: mongo_db.Types.ObjectId,
+        ref: 'Customer'
     },
-    start :
-    {
-        type :Date,
+    start: {
+        type: Date,
         default: Date.now
     },
-    end:
-    {
-        type :Date
+    end: {
+        type: Date
     },
-    invoiceid :{
-        type : mongo_db.Types.ObjectId,
-        ref : 'Invoice'
+    invoiceid: {
+        type: mongo_db.Types.ObjectId,
+        ref: 'Invoice'
     }
 
 })
