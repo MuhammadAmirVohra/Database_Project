@@ -33,6 +33,7 @@ mongo_DB.connection.off('error', () => {
 
 room_array = [];
 
+
 room_category.find({}, (err, data) => {
     var k = 0;
     console.log(data.length);
@@ -96,8 +97,8 @@ room_category.find({}, (err, data) => {
     }
 
     // console.log(room_array); 
-    
-    room.insertMany(room_array,(err, data)=>
+    room.init()
+    room.insertMany(room_array,(err)=>
     {
         
         if (err)
@@ -108,10 +109,9 @@ room_category.find({}, (err, data) => {
         {
             console.log("Added");
         }
-        setTimeout(() => {
-        
-        }, 1000);
+       
     });   
+    
 });
 
 

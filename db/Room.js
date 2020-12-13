@@ -1,5 +1,6 @@
 const mongo_db = require("mongoose");
 const validator = require("validator");
+const room_category = require("./Room_category")
 const pass = require("passport-local-mongoose");
 // const { model } = require("./Customer")
 
