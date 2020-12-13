@@ -32,9 +32,9 @@ const pass = require("passport-local-mongoose");
 // module.exports = mongo_db.model('room_category',Category_schema)
 
 const RoomSchema = new mongo_db.Schema({
-  room_id: {
+  room_number: {
     type: Number,
-    unique: true,
+
     required: true,
     validate: {
       validator: function (value) {

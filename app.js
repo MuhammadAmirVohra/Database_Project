@@ -9,9 +9,10 @@ const pass = require('passport-local-mongoose');
 const bodyParser = require('body-parser');
 const app = express();
 const flash = require('connect-flash');
+const moment = require('moment');
 const Customer = require('./db/Customer.js');
-
-
+const room_category = require('./db/Room_category.js');
+const room = require('./db/Room.js');
 
 app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 
@@ -28,6 +29,93 @@ mongo_DB.connection.on('connected', () => {
 mongo_DB.connection.off('error', () => {
     console.log('Database Failed to Connect');
 });
+
+
+room_array = [];
+
+room_category.find({}, (err, data) => {
+    var k = 0;
+    console.log(data.length);
+
+    for(var i = 0; i < data.length; i++)
+    {
+        if(data[i].name == "Economy")
+        {
+            for(var j = 1; j <= 4; j++)
+            {
+                k += 100;
+                for(var z = k; z <= k+50; z++)
+                {
+                     room_array.push({
+                        room_number : z,
+                        category_id : data[i].id
+                    })
+                }
+            }
+        }
+    
+       else if(data[i].name == "Superior")
+        {
+            for(var j = 1; j <= 2; j++)
+            {
+                k += 100;
+                for(var z = k; z <= k+50; z++)
+                {
+                    room_array.push({
+                        room_number : z,
+                        category_id : data[i].id
+                    })
+                }
+            }
+        }
+
+        else if(data[i].name == "Luxury")
+        {
+            for(var j = 1; j <= 1; j++)
+            {
+                k += 100 ;
+                for(var z = k; z <= k+25; z++)
+                {
+                    room_array.push({
+                        room_number : z,
+                        category_id : data[i].id
+                    })
+                    
+                }
+            }
+        }
+        else
+        {
+            console.log("err");
+        }
+        
+    
+    
+    
+    
+    }
+
+    // console.log(room_array); 
+    
+    room.insertMany(room_array,(err, data)=>
+    {
+        
+        if (err)
+        {
+            console.log(err);
+        }
+        else
+        {
+            console.log("Added");
+        }
+        setTimeout(() => {
+        
+        }, 1000);
+    });   
+});
+
+
+
 
 
 // var Customer_Schema = mongo_DB.Schema({
@@ -254,6 +342,35 @@ app.post('/:id/update', checkAuthenticated, (req,res)=>
     res.redirect("update", {user : req.user});
 });
 
+
+
+app.post("/booking", (req,res)=>
+{
+    // console.log(req.body.category);
+    // console.log(req.body.start);
+    // console.log(req.body.end);
+    var start = moment(req.body.start,'M/D/YYYY');
+    var end = moment(req.body.end,'M/D/YYYY');
+    var diffDays = end.diff(start, 'days');
+    console.log(diffDays);
+    if (diffDays <= 0)
+    {
+        console.log("error");
+        req.flash("Invalid Date");
+        res.redirect("/");
+    }
+    else
+    {
+        console.log("Added");
+
+        res.redirect('/');
+    
+    }
+    // req.flash("error", "Email or Password is incorrect.");
+
+
+    
+});
 
 
 

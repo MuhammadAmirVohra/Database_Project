@@ -51,35 +51,38 @@
 		<div class="container">
 			<div class="row">
 				<div id="availability">
-					<form action="#">
+					<form action="/booking" method="POST" id = "booking_form">
 
 						<div class="a-col">
 							<section>
-								<select class="cs-select cs-skin-border">
+								<select class="cs-select cs-skin-border" name = "category">
 									<option value="" disabled selected>Type of Room</option>
-									<option value="email">Luxury Suite</option>
-									<option value="twitter">Superior Room</option>
-									<option value="linkedin">Economy Room</option>
+									<option value="luxury">Luxury Suite</option>
+									<option value="superior">Superior Room</option>
+									<option value="economy">Economy Room</option>
 								</select>
 							</section>
 						</div>
 						<div class="a-col alternate">
 							<div class="input-field">
 								<label for="date-start">Check In</label>
-								<input type="text" class="form-control" id="date-start" />
+								<input autocomplete="off" type="text" class="form-control" id="date-start" name= "start" />
 							</div>
 						</div>
 						<div class="a-col alternate">
 							<div class="input-field">
 								<label for="date-end">Check Out</label>
-								<input type="text" class="form-control" id="date-end" />
+								<input autocomplete="off" type="text" class="form-control" id="date-end"  name="end"/>
 							</div>
 						</div>
 						<div class="a-col action">
-							<a href="#">
+							<!-- <button type = "submit"> -->
+								<a href="javascript:{}" onclick="document.getElementById('booking_form').submit();">
 								<span>Check</span>
 								Availability
-							</a>
+							 </a>
+							 
+							<!-- </button> -->
 						</div>
 					</form>
 				</div>
