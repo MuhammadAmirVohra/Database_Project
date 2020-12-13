@@ -10,7 +10,7 @@ const InvoiceSchema = new mongo_db.Schema({
     type: Number,
     required: true,
     validate: {
-      validate(value) {
+      validator: function (value) {
         if (value < 0) {
           throw new Error(
             "Invalid amount in invoice || amount is less than zero"
@@ -27,7 +27,7 @@ const InvoiceSchema = new mongo_db.Schema({
     required: true,
     trim: true,
     validate: {
-      validate (value) {
+      validator: function (value) {
         if (
           value.toLowerCase() !== "credit" &&
           value.toLowerCase() !== "debit"

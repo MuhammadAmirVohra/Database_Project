@@ -1,6 +1,6 @@
-const mongo_db = require("mongoose")
-const validator = require("validator")
-const pass = require('passport-local-mongoose')
+const mongo_db = require("mongoose");
+const validator = require("validator");
+const pass = require("passport-local-mongoose");
 // const { model } = require("./Customer")
 
 // const Category_schema = new mongo_db.Schema({
@@ -32,25 +32,25 @@ const pass = require('passport-local-mongoose')
 // module.exports = mongo_db.model('room_category',Category_schema)
 
 const RoomSchema = new mongo_db.Schema({
-    room_id : {
-        type :Number,
-        unique:true,
-        required:true,
-        validate(value){
-            if(value === NaN)
-            {
-                throw new Error("ROOM Id is NULL ");
-
-            }
-            if(value<0)
-            {
-                throw new Error("Invalid Room Id")
-            }
+  room_id: {
+    type: Number,
+    unique: true,
+    required: true,
+    validate: {
+      validator: function (value) {
+        if (value === NaN) {
+          throw new Error("ROOM Id is NULL ");
         }
+        if (value < 0) {
+          throw new Error("Invalid Room Id");
+        }
+      },
     },
-    category_id :{
-        type : mongo_db.Types.ObjectId , ref: 'room_category'
-    }
-})
+  },
+  category_id: {
+    type: mongo_db.Types.ObjectId,
+    ref: "room_category",
+  },
+});
 
-module.exports = mongo_db.model("Room",RoomSchema)
+module.exports = mongo_db.model("Room", RoomSchema);

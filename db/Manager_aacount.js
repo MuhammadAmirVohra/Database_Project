@@ -13,7 +13,7 @@ const ManagerAccountSchema = new mongo_db.Schema({
     trim: true,
     lowercase: true,
     validate: {
-      validate :function(value) {
+      validator: function (value) {
         if (!validator.isEmail(value)) {
           throw new Error("Email is invalid");
         }
@@ -26,13 +26,15 @@ const ManagerAccountSchema = new mongo_db.Schema({
     minlength: 7,
     maxlenght: 32,
     trim: true,
-    validate(value) {
-      if (value.length < 7) {
-        throw new Error("Password is too short ");
-      }
-      if (value.length > 32) {
-        throw new Error("Password is too long");
-      }
+    validate: {
+      validate(value) {
+        if (value.length < 7) {
+          throw new Error("Password is too short ");
+        }
+        if (value.length > 32) {
+          throw new Error("Password is too long");
+        }
+      },
     },
   },
 });

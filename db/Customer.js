@@ -21,7 +21,7 @@ var CustomerSchema = mongo_db.Schema({
     trim: true,
     lowercase: true,
     validate: {
-      validate: function (value) {
+      validator: function (value) {
         if (!validator.isEmail(value)) {
           throw new Error("Email is invalid");
         }
@@ -35,7 +35,7 @@ var CustomerSchema = mongo_db.Schema({
     maxlenght: 32,
     trim: true,
     validate: {
-      validate(value) {
+      validator: function (value) {
         if (value.length < 7) {
           throw new Error("Password is too short ");
         }
@@ -48,7 +48,7 @@ var CustomerSchema = mongo_db.Schema({
   phone: {
     type: String,
     validate: {
-      validate(value) {
+      validator: function (value) {
         if (!validator.isMobilePhone(value)) {
           throw new Error("Invalid mobile phone number");
         }
@@ -66,23 +66,27 @@ var CustomerSchema = mongo_db.Schema({
   cnic: {
     type: String,
     trim: true,
-    validate (value) {
-      data = value.split("-");
-      if (
-        data[0].length !== 5 ||
-        data[1].length !== 7 ||
-        data[2].length !== 1
-      ) {
-        throw new Error("Invalid Identity Number");
-      }
+    validate: {
+      validator: function (value) {
+        data = value.split("-");
+        if (
+          data[0].length !== 5 ||
+          data[1].length !== 7 ||
+          data[2].length !== 1
+        ) {
+          throw new Error("Invalid Identity Number");
+        }
+      },
     },
   },
   credit_card: {
     type: String,
-    validate (value) {
-      if (!validator.isCreditCard(value)) {
-        throw new Error("Invalid Credit Card Number");
-      }
+    validate: {
+      validator: function (value) {
+        if (!validator.isCreditCard(value)) {
+          throw new Error("Invalid Credit Card Number");
+        }
+      },
     },
   },
 });

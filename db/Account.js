@@ -22,7 +22,7 @@ const AccountSchema = new mongo_db.Schema({
     maxlenght: 32,
     trim: true,
     validate: {
-      validate: function (value) {
+      validator: function (value) {
         if (value.length < 7) {
           throw new Error("Password is too short ");
         }
