@@ -1,11 +1,12 @@
 const mongo_db = require("mongoose");
 const validator = require("validator");
+const moment = require('moment');
 const department = require('./Department');
 
 const InvoiceSchema = new mongo_db.Schema({
     date: {
         type: Date,
-        default: Date.now,
+        default: moment(Date.now()),
     },
     amount: {
         type: Number,
