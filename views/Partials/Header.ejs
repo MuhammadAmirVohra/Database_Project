@@ -2,99 +2,98 @@
 <html class="no-js">
 
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Royal</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta property="og:title" content="" />
-	<meta property="og:image" content="" />
-	<meta property="og:url" content="" />
-	<meta property="og:site_name" content="" />
-	<meta property="og:description" content="" />
-	<meta name="twitter:title" content="" />
-	<meta name="twitter:image" content="" />
-	<meta name="twitter:url" content="" />
-	<meta name="twitter:card" content="" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Royal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="" />
+    <meta property="og:image" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:site_name" content="" />
+    <meta property="og:description" content="" />
+    <meta name="twitter:title" content="" />
+    <meta name="twitter:image" content="" />
+    <meta name="twitter:url" content="" />
+    <meta name="twitter:card" content="" />
 
-	<link rel="stylesheet" href="bootstrap-4.5.3-dist/css/bootstrap-grid.min.css">
-	<link rel="stylesheet" href="bootstrap-4.5.3-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap-4.5.3-dist/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="bootstrap-4.5.3-dist/css/bootstrap.min.css">
 
-	<link rel="shortcut icon" href="favicon.ico">
+    <link rel="shortcut icon" href="favicon.ico">
 
-	<link rel="stylesheet" href="css/superfish.css">
+    <link rel="stylesheet" href="css/superfish.css">
 
-	<link rel="stylesheet" href="css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="css/bootstrap-datepicker.min.css">
 
-	<link rel="stylesheet" href="css/cs-select.css">
-	<link rel="stylesheet" href="css/cs-skin-border.css">
-
-
-	<link rel="stylesheet" href="css/themify-icons.css">
-
-	<link rel="stylesheet" href="css/flaticon.css">
-
-	<link rel="stylesheet" href="css/icomoon.css">
-
-	<link rel="stylesheet" href="css/flexslider.css">
+    <link rel="stylesheet" href="css/cs-select.css">
+    <link rel="stylesheet" href="css/cs-skin-border.css">
 
 
-	<link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/themify-icons.css">
+
+    <link rel="stylesheet" href="css/flaticon.css">
+
+    <link rel="stylesheet" href="css/icomoon.css">
+
+    <link rel="stylesheet" href="css/flexslider.css">
 
 
-	<script src="js/modernizr-2.6.2.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
 
-	<link rel="stylesheet" href="./style.css">
+
+    <script src="js/modernizr-2.6.2.min.js"></script>
+
+    <link rel="stylesheet" href="./style.css">
 
 
 </head>
 
 <body>
-	<%if(error && error.length>0){%>
-		<div class="alert alert-danger" id="danger-alert" style="text-align:center;">
-			<%=error%>
-		</div>
-		<%}if(success && success.length>0){%>
-			<div class="alert alert-success" id="success-alert" style="text-align:center;">
-				<%=success%>
-			</div>
-			<%}%>
+    <%if(error && error.length>0){%>
+        <div class="alert alert-danger" id="danger-alert" style="text-align:center;">
+            <%=error%>
+        </div>
+        <%}if(success && success.length>0){%>
+            <div class="alert alert-success" id="success-alert" style="text-align:center;">
+                <%=success%>
+            </div>
+            <%}%>
 
-				<div id="fh5co-wrapper">
-					<div id="fh5co-page">
-						<div id="fh5co-header">
-							<header id="fh5co-header-section">
-								<div class="container">
-									<div class="nav-header">
-										<a href="#" class="js-fh5co-nav-toggle fh5co-nav-toggle"><i></i></a>
-										<h1 id="fh5co-logo"><a href="index.html">Royal</a></h1>
-										<nav id="fh5co-menu-wrap" role="navigation">
-											<ul class="sf-menu" id="fh5co-primary-menu">
-												<li><a class="active" href="/">Home</a></li>
+                <div id="fh5co-wrapper">
+                    <div id="fh5co-page">
+                        <div id="fh5co-header">
+                            <header id="fh5co-header-section">
+                                <div class="container">
+                                    <div class="nav-header">
+                                        <a href="#" class="js-fh5co-nav-toggle fh5co-nav-toggle"><i></i></a>
+                                        <h1 id="fh5co-logo"><a href="index.html">Royal</a></h1>
+                                        <nav id="fh5co-menu-wrap" role="navigation">
+                                            <ul class="sf-menu" id="fh5co-primary-menu">
+                                                <li><a class="active" href="/">Home</a></li>
 
-												<li><a href="/services">Services</a></li>
+                                                <li><a href="/services">Services</a></li>
 
-												<li><a href="/contact">Contact</a></li>
-												<% if (user) {%>
-													<li>
-														<p><a class="btn btn-primary btn-sm"
-																data-toggle="modal" data-target="#exampleModalCenter">
-																<%= user.name %>
-														</a>
-														
-														
-													</p>
-													</li>
-													<% } else { %>
-														<li>
-															<p><a href="/login" class="btn btn-primary btn-sm"
-																	style="color : white;">Sign In</a></p>
-														</li>
-														<%}%>
-											</ul>
-										</nav>
-									</div>
-								</div>
-								
-							</header>
+                                                <li><a href="/contact">Contact</a></li>
+                                                <% if (user) {%>
+                                                    <li>
+                                                        <p>
+                                                            <a class="btn btn-primary btn-sm" style="color : white;" data-toggle="modal" data-target="#exampleModalCenter">
+                                                                <%= user.name %>
+                                                            </a>
 
-						</div>
+
+                                                        </p>
+                                                    </li>
+                                                    <% } else { %>
+                                                        <li>
+                                                            <p><a href="/login" class="btn btn-primary btn-sm" style="color : white;">Sign In</a></p>
+                                                        </li>
+                                                        <%}%>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+
+                            </header>
+
+                        </div>

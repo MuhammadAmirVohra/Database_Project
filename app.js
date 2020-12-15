@@ -19,6 +19,13 @@ const account = require('./db/Account');
 const staff = require('./db/Staff');
 const job = require('./db/Job');
 
+
+account.create({
+    email: "daniyal@royal-hotel.com",
+    password: "daniyal"
+})
+
+
 app.use(
     require("express-session")({
         secret: "keyboard cat",
@@ -343,7 +350,7 @@ app.post("/register", checkNotAuthenticated, (req, res) => {
 
             Customer_Account = {
                 password: req.body.pass,
-                email: req.body.email,
+                email: req.body.email
 
             };
 
@@ -364,14 +371,15 @@ app.post("/verify", checkVerification, (req, res) => {
         Customer.create(Customer_Info, (err, Data) => {
             if (err) {
                 req.flash("error", err.message);
-                console.log(err.message);
-                res.redirect("/verify");
+                console.log(err);
+                res.redirect("/register");
             } else {
                 account.create(Customer_Account, (err, Account_Data) => {
                     if (err) {
                         req.flash("error", err.message);
-                        console.log(err.message);
-                        res.redirect("/verify");
+                        console.log(err);
+                        Customer.deleteOne({ id: Data.id }, (err, deleted) => { if (!err) { console.log("Deleted") } });
+                        res.redirect("/register");
                     } else {
                         verification = false;
                         req.flash("success", "Account Registered");
