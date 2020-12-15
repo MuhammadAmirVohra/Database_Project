@@ -15,6 +15,9 @@ const room = require("./db/Room.js");
 const reservation = require("./db/Reservation");
 const invoice = require("./db/Invoice");
 const department = require("./db/Department");
+const account = require('./db/Account');
+const staff = require('./db/Staff');
+const job = require('./db/Job');
 
 app.use(
     require("express-session")({
@@ -45,6 +48,39 @@ mongo_DB.connection.on("connected", () => {
 mongo_DB.connection.off("error", () => {
     console.log("Database Failed to Connect");
 });
+
+// job.findOne({ Designation: "CEO" }, (err, job_data) => {
+//     if (err) {
+//         console.log(err);
+//     } else {
+
+//         staff.create({
+//             staff_name: "Syed Daniyal Hassan",
+//             salary: 1000000,
+//             job_id: job_data.id,
+//             email: "daniyal@royal-hotel.com"
+
+//         }, (err, staff_data) => {
+//             if (err) {
+//                 console.log(err);
+//             } else {
+//                 console.log("CEO Data Added");
+//                 account.create({
+//                     email: "daniyal@royal-hotel.com",
+//                     password: "daniyal"
+//                 }, (err, account_data) => {
+//                     if (err) {
+//                         console.log(err);
+//                     } else {
+//                         console.log("Account Created");
+//                     }
+//                 })
+//             }
+//         });
+//     }
+// });
+
+
 
 // reservation.find({}, (err, all_reservation)=>{
 
@@ -171,15 +207,17 @@ function randNum(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
+user = null;
+
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
 passport.use(
-    new LocalStrategy(function (username, password, done) {
-        Customer.findOne({
+    new LocalStrategy(function(username, password, done) {
+        account.findOne({
             email: username
-        }, function (err, user) {
+        }, function(err, user) {
             if (err) {
                 return done(err);
             }
@@ -194,15 +232,15 @@ passport.use(
     })
 );
 
-passport.serializeUser(function (user, done) {
+passport.serializeUser(function(user, done) {
     done(null, user);
 });
 
-passport.deserializeUser(function (user, done) {
+passport.deserializeUser(function(user, done) {
     done(null, user);
 });
 
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
     res.locals.currentUser = req.user;
     res.locals.error = req.flash("error");
     res.locals.success = req.flash("success");
@@ -210,20 +248,21 @@ app.use(function (req, res, next) {
 });
 
 app.get("/", (req, res) => {
+    // console.log(user);
     res.render("index", {
-        user: req.user
+        user: user
     });
 });
 
 app.get("/contact", (req, res) => {
     res.render("contact", {
-        user: req.user
+        user: user
     });
 });
 
 app.get("/services", (req, res) => {
     res.render("services", {
-        user: req.user
+        user: user
     });
 });
 
@@ -232,7 +271,7 @@ app.get("/login", checkNotAuthenticated, (req, res) => {
     res.render("signin");
 });
 
-app.get("/loginfailed", checkNotAuthenticated, function (req, res) {
+app.get("/loginfailed", checkNotAuthenticated, function(req, res) {
     if (!req.user) {
         req.flash("error", "Email or Password is incorrect.");
 
@@ -240,15 +279,38 @@ app.get("/loginfailed", checkNotAuthenticated, function (req, res) {
     }
 });
 
+
 app.post(
     "/login",
     passport.authenticate("local", {
         failureRedirect: "/loginfailed"
     }),
-    function (req, res) {
-        req.flash("success", "Welcome " + req.user.name);
+    function(req, res) {
+        req.flash("success", "Welcome " + user.name);
+        const break_email = req.user.email.split("@")
+        if (break_email[1] === "royal-hotel.com") {
+            staff.findOne({ email: req.user.email }, (err, data) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    user = data;
+                    // console.log(user);
+                    res.redirect("/")
+                }
+            });
 
-        res.redirect("/");
+        } else {
+            Customer.findOne({ email: req.user.email }, (err, data) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    user = data;
+                    // console.log(user);
+                    res.redirect("/")
+                }
+            });
+        }
+
     }
 );
 
@@ -271,15 +333,18 @@ app.post("/register", checkNotAuthenticated, (req, res) => {
         } else {
             Customer_Info = {
                 name: req.body.fname + " " + req.body.lname,
-                // city: req.body.city,
-                // gender: req.body.gender,
-                // zip_code : req.body.zip,
                 address: req.body.address,
-                password: req.body.pass,
+                // password: req.body.pass,
                 email: req.body.email,
                 phone: req.body.phone,
                 cnic: req.body.cnic,
                 credit_card: req.body.credit_card,
+            };
+
+            Customer_Account = {
+                password: req.body.pass,
+                email: req.body.email,
+
             };
 
             Code = randNum(1000, 9000);
@@ -302,9 +367,17 @@ app.post("/verify", checkVerification, (req, res) => {
                 console.log(err.message);
                 res.redirect("/verify");
             } else {
-                verification = false;
-                req.flash("success", "Account Registered");
-                res.redirect("/login");
+                account.create(Customer_Account, (err, Account_Data) => {
+                    if (err) {
+                        req.flash("error", err.message);
+                        console.log(err.message);
+                        res.redirect("/verify");
+                    } else {
+                        verification = false;
+                        req.flash("success", "Account Registered");
+                        res.redirect("/login");
+                    }
+                });
             }
         });
     } else {
@@ -324,12 +397,13 @@ app.post("/verify", checkVerification, (req, res) => {
 
 app.get("/info", checkAuthenticated, (req, res) => {
     res.render("info", {
-        user: req.user
+        user: user
     });
 });
 
 app.get("/logout", checkAuthenticated, (req, res) => {
     req.logout();
+    user = null;
     res.redirect("/");
 });
 
@@ -349,7 +423,7 @@ app.post("/:id/update", checkAuthenticated, (req, res) => {
     //         res.redirect('/logout');
     // });
     res.redirect("update", {
-        user: req.user
+        user: user
     });
 });
 
@@ -409,67 +483,66 @@ app.post("/booking", checkAuthenticated, (req, res) => {
                                             break;
                                         }
                                     }
-                                    if(flag)
-                                    {
+                                    if (flag) {
                                         desired_room = categorized_room[i];
                                         break;
                                     }
 
                                 }
-                                    
-                                        console.log("One time " + desired_room);
-                                        
-                                        department.findOne({
-                                                dname: "Room Booking"
-                                            },
-                                            (err, room_book_department) => {
-                                                if (err) {
-                                                    console.log(err);
 
-                                                    //   break;
-                                                } else {
-                                                    console.log("Room Booking Department ID : " + room_book_department.id);
-                                                    invoice.create({
-                                                            date: moment(Date.now()),
-                                                            amount: parseInt(category_data.price)*diffDays,
-                                                            reason: "User with ID : " +
-                                                                req.user._id +
-                                                                " have booked room No." +
-                                                                desired_room.room_number,
-                                                            type: "credit",
-                                                            department_id: room_book_department.id,
-                                                        },
-                                                        (err, invoice_data) => {
+                                console.log("One time " + desired_room);
+
+                                department.findOne({
+                                        dname: "Room Booking"
+                                    },
+                                    (err, room_book_department) => {
+                                        if (err) {
+                                            console.log(err);
+
+                                            //   break;
+                                        } else {
+                                            console.log("Room Booking Department ID : " + room_book_department.id);
+                                            invoice.create({
+                                                    date: moment(Date.now()),
+                                                    amount: parseInt(category_data.price) * diffDays,
+                                                    reason: "User with ID : " +
+                                                        user.id +
+                                                        " have booked room No." +
+                                                        desired_room.room_number,
+                                                    type: "credit",
+                                                    department_id: room_book_department.id,
+                                                },
+                                                (err, invoice_data) => {
+                                                    if (err) {
+                                                        console.log(err);
+                                                        //   break;
+                                                    } else {
+                                                        reservation.create({
+                                                            room_id: desired_room.id,
+                                                            customer_id: user.id,
+                                                            start: start,
+                                                            end: end,
+                                                            invoice_id: invoice_data.id,
+                                                        }, (err, reservation_done) => {
                                                             if (err) {
                                                                 console.log(err);
-                                                                //   break;
+                                                                // break;
                                                             } else {
-                                                                reservation.create({
-                                                                    room_id: desired_room.id,
-                                                                    customer_id: req.user._id,
-                                                                    start: start,
-                                                                    end: end,
-                                                                    invoice_id: invoice_data.id,
-                                                                }, (err, reservation_done) => {
-                                                                    if (err) {
-                                                                        console.log(err);
-                                                                        // break;
-                                                                    } else {
-                                                                        console.log("Added");
-                                                                        // flag_break = true
-                                                                        req.flash("success", "Room is booked for " + diffDays + " Days");
-                                                                        res.redirect("/");
-                                                                    }
-
-                                                                });
+                                                                console.log("Added");
+                                                                // flag_break = true
+                                                                req.flash("success", "Room is booked for " + diffDays + " Days");
+                                                                res.redirect("/");
                                                             }
-                                                        }
-                                                    );
+
+                                                        });
+                                                    }
                                                 }
-                                            }
-                                        );
-                                    
-                                 
+                                            );
+                                        }
+                                    }
+                                );
+
+
                             }
                         });
                     }
