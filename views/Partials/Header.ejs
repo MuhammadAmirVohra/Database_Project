@@ -49,50 +49,52 @@
 </head>
 
 <body>
-		<%if(error && error.length>0){%>
+	<%if(error && error.length>0){%>
 		<div class="alert alert-danger" id="danger-alert" style="text-align:center;">
-		  <%=error%>
+			<%=error%>
 		</div>
 		<%}if(success && success.length>0){%>
-		<div class="alert alert-success" id="success-alert" style="text-align:center;">
-		  <%=success%>
-		</div> 
-		<%}%>
-	
-	<div id="fh5co-wrapper">
-		<div id="fh5co-page">
-			<div id="fh5co-header">
-				<header id="fh5co-header-section">
-					<div class="container">
-						<div class="nav-header">
-							<a href="#" class="js-fh5co-nav-toggle fh5co-nav-toggle"><i></i></a>
-							<h1 id="fh5co-logo"><a href="index.html">Royal</a></h1>
-							<nav id="fh5co-menu-wrap" role="navigation">
-								<ul class="sf-menu" id="fh5co-primary-menu">
-									<li><a class="active" href="/">Home</a></li>
-
-									<li><a href="/services">Services</a></li>
-
-									<li><a href="/contact">Contact</a></li>
-									<% if (user) {%>
-										<li>
-											<p><a href="/info" class="btn btn-primary btn-sm" style="color : white;">
-													<%= user.name %>
-												</a></p>
-										</li>
-										<% } else { %>
-											<li>
-												<p><a href="/login" class="btn btn-primary btn-sm"
-														style="color : white;">Sign In</a></p>
-											</li>
-											<%}%>
-								</ul>
-							</nav>
-						</div>
-					</div>
-				</header>
-
+			<div class="alert alert-success" id="success-alert" style="text-align:center;">
+				<%=success%>
 			</div>
-		 
+			<%}%>
 
-	
+				<div id="fh5co-wrapper">
+					<div id="fh5co-page">
+						<div id="fh5co-header">
+							<header id="fh5co-header-section">
+								<div class="container">
+									<div class="nav-header">
+										<a href="#" class="js-fh5co-nav-toggle fh5co-nav-toggle"><i></i></a>
+										<h1 id="fh5co-logo"><a href="index.html">Royal</a></h1>
+										<nav id="fh5co-menu-wrap" role="navigation">
+											<ul class="sf-menu" id="fh5co-primary-menu">
+												<li><a class="active" href="/">Home</a></li>
+
+												<li><a href="/services">Services</a></li>
+
+												<li><a href="/contact">Contact</a></li>
+												<% if (user) {%>
+													<li>
+														<p><a class="btn btn-primary btn-sm"
+																data-toggle="modal" data-target="#exampleModalCenter">
+																<%= user.name %>
+														</a>
+														
+														
+													</p>
+													</li>
+													<% } else { %>
+														<li>
+															<p><a href="/login" class="btn btn-primary btn-sm"
+																	style="color : white;">Sign In</a></p>
+														</li>
+														<%}%>
+											</ul>
+										</nav>
+									</div>
+								</div>
+								
+							</header>
+
+						</div>
