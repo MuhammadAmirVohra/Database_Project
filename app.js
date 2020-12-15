@@ -207,7 +207,7 @@ function randNum(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-user = null;
+var user = null;
 
 app.use(flash());
 app.use(passport.initialize());
@@ -286,7 +286,6 @@ app.post(
         failureRedirect: "/loginfailed"
     }),
     function(req, res) {
-        req.flash("success", "Welcome " + user.name);
         const break_email = req.user.email.split("@")
         if (break_email[1] === "royal-hotel.com") {
             staff.findOne({ email: req.user.email }, (err, data) => {
@@ -294,7 +293,8 @@ app.post(
                     console.log(err);
                 } else {
                     user = data;
-                    // console.log(user);
+                    console.log(user);
+                    req.flash("success", "Welcome " + user.name);
                     res.redirect("/")
                 }
             });
@@ -305,7 +305,7 @@ app.post(
                     console.log(err);
                 } else {
                     user = data;
-                    // console.log(user);
+                    req.flash("success", "Welcome " + user.name);
                     res.redirect("/")
                 }
             });
@@ -559,6 +559,7 @@ var PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     Customer_Info = {};
     Code = 0;
+    user = null;
     verification = false;
     console.log("Server Started at ", PORT);
 });

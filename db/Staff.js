@@ -5,7 +5,7 @@ const department = require('./Department');
 
 
 const StaffSchema = new mongo_db.Schema({
-    staff_name: {
+    name: {
         type: String,
         required: true,
         trim: true,

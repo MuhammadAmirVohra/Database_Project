@@ -3,7 +3,7 @@ const validator = require("validator");
 const pass = require("passport-local-mongoose");
 
 const AccountSchema = new mongo_db.Schema({
-    mail: {
+    email: {
         type: String,
         unique: true,
         required: true,
