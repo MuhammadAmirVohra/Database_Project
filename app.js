@@ -20,11 +20,6 @@ const staff = require('./db/Staff');
 const job = require('./db/Job');
 
 
-account.create({
-    email: "daniyal@royal-hotel.com",
-    password: "daniyal"
-})
-
 
 app.use(
     require("express-session")({
