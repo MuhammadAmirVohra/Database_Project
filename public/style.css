@@ -63,3 +63,8 @@ button.signin-btn {
 .col-8 {
     margin-right: 80px;
 }
+
+.alert {
+    border: 1px solid darkgreen;
+    margin-bottom: -8px;
+}

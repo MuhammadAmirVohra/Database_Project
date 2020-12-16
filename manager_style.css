@@ -77,3 +77,27 @@ form {
     max-width: 100%;
     display: block;
 }
+
+.jumbotron-buttons {
+    list-style: none;
+    /* text-align: right; */
+    position: relative;
+    left: 354px;
+    bottom: 119px;
+}
+
+.jumbotron-buttons ul {
+    list-style: none;
+}
+
+.jumbotron-buttons ul li {
+    margin: 10px;
+}
+
+.jumbotron-buttons li a {
+    width: 200px;
+}
+
+.btn-outline-danger {
+    color: #B70907
+}

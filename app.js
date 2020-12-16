@@ -20,6 +20,7 @@ const staff = require('./db/Staff');
 const job = require('./db/Job');
 
 
+invoice.watch().on('change', change => console.log(change));
 
 app.use(
     require("express-session")({
@@ -290,17 +291,30 @@ app.post(
     function(req, res) {
         const break_email = req.user.email.split("@")
         if (break_email[1] === "royal-hotel.com") {
-            staff.findOne({ email: req.user.email }, (err, data) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    user = data;
-                    console.log(user);
-                    req.flash("success", "Welcome " + user.name);
-                    res.redirect("/")
-                }
-            });
+            if (break_email[0] == "frontdesk") res.redirect('/frontdesk');
+            else {
+                staff.findOne({ email: req.user.email }, (err, data) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        user = data;
+                        req.flash("success", "Welcome " + user.name);
+                        job.findOne({ Designation: "CEO" }, (err, job_data) => {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                if (user.job_id == job_data.id) {
+                                    res.redirect('/ceo');
+                                } else {
+                                    res.redirect('/manager');
+                                }
+                            }
+                        });
 
+                    }
+                });
+
+            }
         } else {
             Customer.findOne({ email: req.user.email }, (err, data) => {
                 if (err) {
@@ -373,12 +387,13 @@ app.post("/verify", checkVerification, (req, res) => {
                     if (err) {
                         req.flash("error", err.message);
                         console.log(err);
-                        Customer.deleteOne({ id: Data.id }, (err, deleted) => { if (!err) { console.log("Deleted") } });
+                        Customer.deleteOne({ _id: Data.id }, (err, deleted) => { if (!err) { console.log("Deleted") } });
                         res.redirect("/register");
                     } else {
                         verification = false;
                         req.flash("success", "Account Registered");
                         res.redirect("/login");
+
                     }
                 });
             }
@@ -450,6 +465,8 @@ app.post("/booking", checkAuthenticated, (req, res) => {
         }, (err, category_data) => {
             if (err) {
                 console.log(err);
+                req.flash("error", err.message);
+                res.redirect("/");
             } else {
                 console.log(category_data._id);
                 room.find({
@@ -457,13 +474,17 @@ app.post("/booking", checkAuthenticated, (req, res) => {
                 }, (err, categorized_room) => {
                     if (err) {
                         console.log(err);
+                        req.flash("error", err.message);
+                        res.redirect("/");
                     } else {
                         console.log("Room Recieved of ID :" + categorized_room[0].id);
                         reservation.find({}, (err, all_reservation) => {
                             if (err) {
                                 console.log(err);
+                                req.flash("error", err.message);
+                                res.redirect("/");
                             } else {
-                                console.log("Reservation Data Recieved");
+                                // console.log("Reservation Data Recieved");
                                 reserved = [];
                                 for (var i = 0; i < all_reservation.length; i++) {
                                     if (
@@ -493,7 +514,7 @@ app.post("/booking", checkAuthenticated, (req, res) => {
 
                                 }
 
-                                console.log("One time " + desired_room);
+                                // console.log("One time " + desired_room);
 
                                 department.findOne({
                                         dname: "Room Booking"
@@ -501,10 +522,11 @@ app.post("/booking", checkAuthenticated, (req, res) => {
                                     (err, room_book_department) => {
                                         if (err) {
                                             console.log(err);
-
+                                            req.flash("error", err.message);
+                                            res.redirect("/");
                                             //   break;
                                         } else {
-                                            console.log("Room Booking Department ID : " + room_book_department.id);
+                                            // console.log("Room Booking Department ID : " + room_book_department.id);
                                             invoice.create({
                                                     date: moment(Date.now()),
                                                     amount: parseInt(category_data.price) * diffDays,
@@ -518,6 +540,8 @@ app.post("/booking", checkAuthenticated, (req, res) => {
                                                 (err, invoice_data) => {
                                                     if (err) {
                                                         console.log(err);
+                                                        req.flash("error", err.message);
+                                                        res.redirect("/");
                                                         //   break;
                                                     } else {
                                                         reservation.create({
@@ -529,9 +553,11 @@ app.post("/booking", checkAuthenticated, (req, res) => {
                                                         }, (err, reservation_done) => {
                                                             if (err) {
                                                                 console.log(err);
+                                                                req.flash("error", err.message);
+                                                                res.redirect("/");
                                                                 // break;
                                                             } else {
-                                                                console.log("Added");
+                                                                // console.log("Added");
                                                                 // flag_break = true
                                                                 req.flash("success", "Room is booked for " + diffDays + " Days");
                                                                 res.redirect("/");
@@ -556,6 +582,282 @@ app.post("/booking", checkAuthenticated, (req, res) => {
 
     }
 });
+
+
+
+
+app.get('/ceo', checkCEO, (req, res) => {
+    staff.find({ manager_id: user.id })
+        .populate('department_id')
+        .exec(async function(err, results) {
+            invoice.find({}).populate('department_id').exec(function(err, invoices) {
+                if (err) { console.log(err); } else { res.render("ceo", { managers: results, ceo: user, invoices: invoices }); }
+            });
+        });
+
+});
+
+
+
+app.post('/addmanager', checkCEO, (req, res) => {
+    department.findOne({ dname: req.body.department }, (err, department_data) => {
+        if (err) {
+            console.log(err);
+        } else {
+            job.findOne({ Designation: "Manager" }, (err, job_data) => {
+                if (err) {
+                    console.log(err);
+                    req.flash("error", err.message);
+                    res.redirect("/ceo");
+                } else {
+
+                    staff.create({
+                        name: req.body.fname + " " + req.body.lname,
+                        salary: req.body.salary,
+                        job_id: job_data.id,
+                        email: req.body.email,
+                        department_id: department_data.id,
+                        manager_id: user.id
+
+                    }, (err, staff_data) => {
+                        if (err) {
+                            console.log(err);
+                            req.flash("error", err.message);
+                            res.redirect("/ceo");
+                        } else {
+                            console.log("Staff Data Inserted");
+                            account.create({
+                                email: req.body.email,
+                                password: req.body.pass
+                            }, (err, account_data) => {
+                                if (err) {
+                                    console.log(err);
+                                    staff.deleteOne({ _id: staff_data.id });
+                                } else {
+                                    console.log("Account Data Created");
+                                    department.updateOne({ dname: req.body.department }, { $push: { mng_ssn: staff_data.id } }, (err, updated) => {
+                                        if (err) {
+                                            console.log(err);
+
+                                            account.deleteOne({ _id: account_data.id });
+                                            staff.deleteOne({ _id: staff_data.id });
+                                            req.flash("error", err.message);
+                                            res.redirect("/ceo");
+                                        } else {
+                                            console.log("DONE !!");
+                                            req.flash("success", "Manager Data Added !");
+                                            res.redirect("/ceo");
+                                        }
+                                    });
+
+
+                                }
+                            })
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+
+
+
+});
+
+
+app.post('/delete_manager', (req, res) => {
+    department.updateOne({ mng_ssn: req.body.id }, { $pull: { mng_ssn: [req.body.id] } }, (err, deleted) => {
+        if (err) {
+            console.log(err);
+            req.flash("error", err.message);
+            res.redirect('/ceo');
+        } else {
+            account.deleteOne({ email: req.body.email }, (err, acc_delete) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    staff.deleteOne({ email: req.body.email }, (err, staff_delete) => {
+                        console.log("Deleted");
+                        req.flash("success", "Data Deleted");
+                        res.redirect('/ceo');
+                    });
+                }
+            });
+        }
+    });
+
+});
+
+
+
+
+app.get('/manager', CheckManager, (req, res) => {
+
+    department.findOne({ mng_ssn: user.id }, (err, department_data) => {
+        if (err) { console.log(err); } else {
+
+            staff.find({ manager_id: user.id }, (err, staff_data) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    if (department_data.dname == "Finance") {
+                        invoice.find({}).populate('department_id').exec(function(err, invoices) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+
+                                res.render("manager", { manager: user, department: department_data.dname, staff: staff_data, invoices: invoices });
+                            }
+                        });
+                    } else {
+                        invoice.find({ department_id: department_data.id }, (err, invoices) => {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                res.render("manager", { manager: user, department: department_data.dname, staff: staff_data, invoices: invoices });
+                            }
+                        });
+                    }
+
+
+                }
+            });
+        }
+    });
+
+
+});
+
+
+app.post('/add_staff', CheckManager, (req, res) => {
+
+    department.findOne({ mng_ssn: user.id }, (err, department_data) => {
+        if (err) {
+            console.log(err);
+            req.flash("error", err.message);
+            res.redirect('/manager');
+        } else {
+
+            var des = "";
+            if (department_data.dname == "Finance")
+                des = "Technical";
+            else
+                des = "Non Technical";
+
+            job.findOne({ Designation: des }, (err, job_data) => {
+                if (err) {
+                    console.log(err);
+                    req.flash("error", err.message);
+                    res.redirect('/manager');
+
+                } else {
+
+                    staff.create({
+                        name: req.body.fname + " " + req.body.lname,
+                        salary: req.body.salary,
+                        email: req.body.email,
+                        manager_id: user.id,
+                        job_id: job_data.id,
+                        department_id: user.department_id
+                    }, (err, staf_data) => {
+                        if (err) {
+                            console.log(err);
+                            req.flash("error", err.message);
+                            res.redirect('/manager');
+                        } else {
+                            req.flash("success", "Staff Data Added");
+                            res.redirect('/manager');
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+
+});
+
+app.post('/remove_staff', CheckManager, (req, res) => {
+    staff.findOne({ _id: req.body.id }, (err, data) => {
+        if (err) {
+            console.log(err);
+            req.flash("error", err.message);
+            res.redirect('/manager');
+        } else {
+            if (data) {
+                console.log(data);
+                console.log(req.body.id);
+                console.log(req.body.email);
+                if (data.id == req.body.id && data.email == req.body.email) {
+
+                    staff.deleteOne({ _id: req.body.id }, (err, delete_data) => {
+                        if (err) {
+                            console.log(err);
+                            req.flash("error", err.message);
+                            res.redirect('/manager');
+                        } else {
+                            if (delete_data) {
+                                req.flash("success", "Staff Data Deleted");
+                                res.redirect('/manager');
+                            } else {
+                                req.flash("erorr", "Data Not Found");
+                                res.redirect('/manager');
+                            }
+                        }
+                    });
+
+                } else {
+                    req.flash("error", "Please Provide Correct Data to Delete the Record");
+                    res.redirect('/manager');
+                }
+            }
+        }
+    })
+});
+
+
+
+app.post('/add_invoice', CheckManager, (req, res) => {
+
+    invoice.create({
+            date: moment(Date.now()),
+            amount: req.body.amount,
+            reason: req.body.reason,
+            type: "debit",
+            department_id: user.department_id,
+        },
+        (err, invoice_data) => {
+            if (err) {
+                console.log(err);
+                req.flash("error", err.message);
+                res.redirect('/manager');
+            } else {
+                req.flash("success", "Invoice Added !");
+                res.redirect('/manager');
+            }
+        });
+
+
+});
+
+
+
+app.get('/frontdesk', CheckFrontDesk, (req, res) => {
+    reservation.find({}).populate('room_id').populate('customer_id').exec(function(err, reservations) {
+        if (err) { console.log(err); } else {
+            Customer.find({}, (err, Customer_Data) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.render('frontdesk', { Reservations: reservations, Customers: Customer_Data });
+                }
+            });
+        }
+
+    });
+});
+
 
 var PORT = process.env.PORT || 5000;
 
@@ -589,4 +891,54 @@ function checkNotAuthenticated(req, res, next) {
         return res.redirect("/");
     }
     next();
+}
+
+function checkCEO(req, res, next) {
+    if (req.isAuthenticated()) {
+        if (req.user.email.split("@")[1] == "royal-hotel.com") {
+            job.findOne({ Designation: "CEO" }, (err, data) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    if (data.id == user.job_id) {
+                        next();
+                    } else {
+                        res.redirect('/manager');
+                    }
+                }
+            });
+        } else {
+            res.redirect('/');
+        }
+
+    } else {
+        res.redirect('/login');
+    }
+
+}
+
+
+function CheckFrontDesk(req, res, next) {
+    if (req.isAuthenticated()) {
+        if (req.user.email.split("@")[1] == "royal-hotel.com") {
+            next();
+        } else {
+            res.redirect('/');
+        }
+    } else {
+        res.redirect('/login');
+    }
+}
+
+
+function CheckManager(req, res, next) {
+    if (req.isAuthenticated()) {
+        if (req.user.email.split("@")[1] == "royal-hotel.com" && req.user.email.split("@")[0] != "frontdesk") {
+            next();
+        } else {
+            res.redirect('/');
+        }
+    } else {
+        res.redirect('/login');
+    }
 }

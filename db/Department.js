@@ -9,10 +9,10 @@ const DepartmentSchema = new mongo_db.Schema({
         unique: true,
         required: true
     },
-    mng_ssn: {
+    mng_ssn: [{
         type: mongo_db.Types.ObjectId,
         ref: 'Staff'
-    }
+    }]
 })
 
 module.exports = mongo_db.model("Department", DepartmentSchema)

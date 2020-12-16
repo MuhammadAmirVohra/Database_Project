@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous" />
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="manager_style.css" />
+
+  <title>Front Desk</title>
+</head>
+
+<body>
+  <%if(error && error.length>0){%>
+  <div class="alert alert-danger" id="danger-alert" style="text-align:center;">
+    <%=error%>
+  </div>
+  <%}if(success && success.length>0){%>
+  <div class="alert alert-success" id="success-alert" style="text-align:center;">
+    <%=success%>
+  </div>
+  <%}%>
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container-fluid ml-5">
+        <h1 class="display-4 ">Front Desk</h1>
+        <p class="lead"></p>
+        <div class = "jumbotron-buttons">
+        <ul >
+        <li><a href="/logout" class = "btn btn-lg btn-outline-danger">Log Out</a></li>
+        <li><a href="/" class = "btn btn-lg btn-outline-danger">Home Page</a></li></ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="wrapper">
+      <div class="container">
+        <div class="row"></div>
+        <div class="row">
+          <ul class="nav nav-pills mb-3 nav-fill" id="pills-tab" role="tablist">
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                id="Reservations-tab"
+                data-toggle="pill"
+                href="#Reservations"
+                role="tab"
+                aria-controls="Reservations-tab"
+                aria-selected="true"
+                >Reservations</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="Customers-tab"
+                data-toggle="pill"
+                href="#Customers"
+                role="tab"
+                aria-controls="Customers-tab"
+                aria-selected="true"
+                >Customers</a
+              >
+            </li>
+            
+          </ul>
+        </div>
+        <div class="row">
+          <div class="tab-content" id="pills-tabContent">
+            <div
+              class="tab-pane fade show active"
+              id="Reservations"
+              role="tabpanel"
+              aria-labelledby="Reservations-tab"
+            >
+              <% if(Reservations.length == 0) {%> <h1 class="display-4 text-center">No Reservations</h1> <%} else {%>
+  <h1 class="display-4 text-center">Reservations</h1>
+  <div class="invoice_table">
+    <script>
+      $(document).ready(function () {
+        $("#Reservations_Search").on("keyup", function () {
+          var value = $(this).val().toLowerCase();
+          $("#Reservations_Table tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+        });
+      });
+    </script>
+    <input class="form-control  Search_Bar" id="Reservations_Search" type="text" style="border: 1px solid #B70907; margin: 3px;"
+      placeholder="Search">
+    <table id="Reservations_Table" class="table table-sm table-light table-bordered text-center ">
+      <thead>
+        <tr class="fixed">
+          <th scope="col">#</th>
+          <th scope="col">Room Number</th>
+          <th scope="col">Customer Name</th>
+          <th scope="col">Customer Email</th>
+          <th scope="col">Start Date</th>
+          <th scope="col">End Date</th>
+          <th scope="col">Invoice ID</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <% for(var i = 0; i < Reservations.length; i++) { %>
+        <tr>
+          <th scope="row"><%= i+1 %></th>
+          <td><%= Reservations[i].room_id.room_number %></td>
+          <td><%= Reservations[i].customer_id.name %></td>
+          <td><%= Reservations[i].customer_id.email %></td>
+          <td><%= Reservations[i].start.toDateString() %></td>
+          <td><%= Reservations[i].end.toDateString() %></td>
+          <td><%= Reservations[i].invoice_id %></td>
+
+
+        </tr>
+        <%}%>
+                 
+                  </tbody>
+                </table>
+              </div><%}%>
+  </div>
+  <div class="tab-pane fade" id="Customers" role="tabpanel" aria-labelledby="Customers-tab">
+    <% if(Customers.length == 0) {%> <h1 class="display-4 text-center">No Customers</h1> <%} else {%>
+    <h1 class="display-4 text-center">Customers</h1>
+    <div class="invoice_table">
+      <script>
+        $(document).ready(function () {
+          $("#Customers_Search").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#Customers_Table tr").filter(function () {
+              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+          });
+        });
+      </script>
+      <input class="form-control Search_Bar" id="Customers_Search" type="text" 
+        placeholder="Search">
+      <table id="Customers_Table" class="table table-sm table-light table-bordered text-center ">
+        <thead>
+          <tr class="fixed">
+            <th scope="col">#</th>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Address</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <% for(var i = 0; i < Customers.length; i++) { %>
+          <tr>
+            <th scope="row"><%= i+1 %></th>
+            <td><%= Customers[i].id %></td>
+            <td><%= Customers[i].name %></td>
+            <td><%= Customers[i].email %></td>
+            <td><%= Customers[i].phone %></td>
+            <td><%= Customers[i].address %></td>
+          </tr>
+          <%}%>
+                 
+                  </tbody>
+                </table>
+              </div><%}%>
+    </div>
+
+  </div>
+  </div>
+  </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous">
+  </script>
+
+  <script src="script.js"></script>
+  <!-- Option 2: Separate Popper and Bootstrap JS -->
+  <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
+    -->
+</body>
+
+</html>

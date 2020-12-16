@@ -1,0 +1,109 @@
+* {
+    font-size: 20px;
+}
+
+.row {
+    padding-bottom: 30px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.jumbotron {
+    height: 200px;
+    background-color: lightgray;
+    text-align: center;
+    margin: 10px;
+}
+
+.jumbotron h1,
+p {
+    margin-left: 100px;
+    text-align: left;
+    margin: -20px 30px;
+}
+
+.jumbotron p {
+    margin-top: 10px;
+}
+
+.invoice_table {
+    overflow: hidden;
+    height: 800px;
+    overflow-y: scroll;
+}
+
+.table .fixed th {
+    top: 0;
+    z-index: 2;
+    position: sticky;
+    background-color: #B70907;
+    color: white;
+    font-weight: 650;
+}
+
+.align-center {
+    text-align: center;
+    margin: 0 200px;
+}
+
+.nav-item {
+    margin: 0 10px;
+}
+
+.nav-item a {
+    background-color: #B70907;
+    color: white;
+}
+
+.nav-pills .nav-link.active {
+    color: #fff;
+    background-color: darkgray;
+}
+
+form {
+    margin-top: 20px;
+}
+
+.red {
+    background-color: #B70907;
+}
+
+#wrapper {
+    margin: 0 auto;
+    width: 1750px;
+}
+
+#wrapper .container {
+    max-width: 100%;
+    display: block;
+}
+
+.jumbotron-buttons {
+    list-style: none;
+    /* text-align: right; */
+    position: relative;
+    left: 354px;
+    bottom: 119px;
+}
+
+.jumbotron-buttons ul {
+    list-style: none;
+}
+
+.jumbotron-buttons ul li {
+    margin: 10px;
+}
+
+.jumbotron-buttons li a {
+    width: 200px;
+}
+
+.btn-outline-danger {
+    color: #B70907
+}
+
+.Search_Bar {
+    border: 1px solid #B70907;
+    margin: 3px;
+    width: 1600px;
+}

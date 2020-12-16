@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./manager_style.css" />
+
+    <title>Manager</title>
+  </head>
+
+  <body>
+  <%if(error && error.length>0){%>
+        <div class="alert alert-danger" id="danger-alert" style="text-align:center;">
+            <%=error%>
+        </div>
+        <%}if(success && success.length>0){%>
+            <div class="alert alert-success" id="success-alert" style="text-align:center;">
+                <%=success%>
+            </div>
+            <%}%>
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container-fluid ml-5">
+        <h1 class="display-4 "><%=department%> Manager</h1>
+        <p class="lead"><%= manager.name %></p>
+        <div class = "jumbotron-buttons">
+        <ul >
+        <li><a href="/logout" class = "btn btn-lg btn-outline-danger">Log Out</a></li>
+        <li><a href="/" class = "btn btn-lg btn-outline-danger">Home Page</a></li></ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="wrapper">
+      <div class="container">
+        <div class="row"></div>
+        <div class="row">
+          <ul class="nav nav-pills mb-3 nav-fill" id="pills-tab" role="tablist">
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                id="Invoices-tab"
+                data-toggle="pill"
+                href="#Invoices"
+                role="tab"
+                aria-controls="Invoices-tab"
+                aria-selected="true"
+                >Invoices</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="Staff-tab"
+                data-toggle="pill"
+                href="#Staff"
+                role="tab"
+                aria-controls="Staff-tab"
+                aria-selected="true"
+                >All Staff</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="Hire-tab"
+                data-toggle="pill"
+                href="#Hire"
+                role="tab"
+                aria-controls="Hire-tab"
+                aria-selected="false"
+                >Add Employee Data</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="Remove-tab"
+                data-toggle="pill"
+                href="#Remove"
+                role="tab"
+                aria-controls="Remove-tab"
+                aria-selected="false"
+                >Remove Employee Data</a
+              >
+            </li>
+
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="Generate_Invoice-tab"
+                data-toggle="pill"
+                href="#Generate_Invoice"
+                role="tab"
+                aria-controls="Generate_Invoice-tab"
+                aria-selected="false"
+                >Generate Invoice</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="row">
+          <div class="tab-content" id="pills-tabContent">
+            <div
+              class="tab-pane fade show active"
+              id="Invoices"
+              role="tabpanel"
+              aria-labelledby="Invoices-tab"
+            >
+              <% if(invoices.length == 0) {%> <h1 class="display-4 text-center">No Invoice</h1> <%} else {%>
+              <h1 class="display-4 text-center">Invoices</h1>
+              <div class="invoice_table">
+              <script>
+              $(document).ready(function(){
+                $("#Invoice_Search").on("keyup", function() {
+                  var value = $(this).val().toLowerCase();
+                  $("#Invoice_Table tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                  });
+                });
+              });
+              </script>
+               <input class="form-control Search_Bar" id="Invoice_Search" type="text" style="border: 1px solid #B70907; margin: 3px;" placeholder="Search">
+              <table id="Invoice_Table" class="table table-sm table-light table-bordered text-center ">
+                <thead>
+                  <tr class="fixed">
+                    <th scope="col">#</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Reason</th>
+                    <th scope="col">Amount</th>
+                    <% if(department == "Finance") {%><th scope="col">Department</th><%}%>
+                  </tr>
+                </thead>
+                <tbody>
+                <% for(var i = 0; i < invoices.length; i++) { %>
+                  <tr <% if(department == "Finance") { if (invoices[i].type == "credit") { %> class = "table-success" <%} else { %> class = "table-danger" <%}}%>>
+                    <th scope="row"><%= i+1 %></th>
+                    <td><%= invoices[i].date.toDateString() %></td>
+                    <td><%= invoices[i].reason %></td>
+                    <td><%= invoices[i].amount %></td>
+                    <% if(department == "Finance") {%>
+                    <td><%= invoices[i].department_id.dname %></td>
+                    <%}%>
+                  </tr>
+                  <%}%>
+                 
+                  </tbody>
+                </table>
+              </div><%}%>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="Staff"
+              role="tabpanel"
+              aria-labelledby="Staff-tab"
+            >
+               <% if(staff.length == 0) {%> <h1 class="display-4 text-center">No Staff</h1> <%} else {%>
+               <h1 class="display-4 text-center">Staff</h1>
+              <div class="invoice_table">
+               <script>
+              $(document).ready(function(){
+                $("#Staff_Search").on("keyup", function() {
+                  var value = $(this).val().toLowerCase();
+                  $("#Staff_Table tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                  });
+                });
+              });
+              </script>
+               <input class="form-control  Search_Bar" id="Staff_Search" type="text" style="border: 1px solid #B70907; margin: 3px;" placeholder="Search">
+              
+              <table id = "Staff_Table" class="table table-sm table-light table-bordered text-center ">
+                <thead>
+                  <tr class="fixed">
+                    <th scope="col">#</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Salary</th>
+                  </tr>
+                </thead>
+                <tbody>
+                <% for(var i = 0; i < staff.length; i++) { %>
+                  <tr>
+                    <th scope="row"><%= i+1 %></th>
+                    <td><%= staff[i].id %></td>
+                    <td><%= staff[i].name %></td>
+                    <td><%= staff[i].email %></td>
+                    <td><%= staff[i].salary %></td>
+                  </tr>
+                  <%}%>
+                 
+                  </tbody>
+                </table>
+              </div><%}%>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="Hire"
+              role="tabpanel"
+              aria-labelledby="Hire-tab"
+            >
+              <div class="container">
+                <form action="/add_staff" method="post">
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputFirstName4">First Name</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="inputFirstName4"
+                        placeholder="First Name"
+                        name="fname"
+                        required
+                      />
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputLastName4">Last Name</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="inputLastName4"
+                        placeholder="Last  Name"
+                        name="lname"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputEmail4">Email</label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="inputEmail4"
+                        placeholder="Email"
+                        name="email"
+                        required
+                      />
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputEmail4">Salary</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="inputEmail4"
+                        placeholder="Salary"
+                        name="salary"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <button
+                    type="submit"
+                    class="btn btn-danger btn-lg btn-block red"
+                  >
+                    Add Employee Data
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="Remove"
+              role="tabpanel"
+              aria-labelledby="Remove-tab"
+            >
+              <div class="container">
+                <form action="/remove_staff" method="post">
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputFirstName4">Employee ID</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="inputFirstName4"
+                        placeholder="ID"
+                        name="id"
+                        required
+                      />
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputEmail4">Email</label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="inputEmail4"
+                        placeholder="Email"
+                        name="email"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <button
+                    type="submit"
+                    class="btn btn-danger btn-lg btn-block red"
+                  >
+                    Remove Employee Data
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="Generate_Invoice"
+              role="tabpanel"
+              aria-labelledby="Generate_Invoice-tab"
+            >
+              <div class="container">
+                <form action="/add_invoice" method="post">
+                  <div class="form-row">
+                    <div class="form-group col-md-12">
+                      <label for="inputFirstName4">Amount</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="inputFirstName4"
+                        placeholder="Amount"
+                        name="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-12">
+                      <label for="inputEmail4">Reason</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="inputEmail4"
+                        placeholder="Reason"
+                        name="reason"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    class="btn btn-danger btn-lg btn-block red"
+                  >
+                    Generate Invoice
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+      crossorigin="anonymous"
+    ></script>
+<script
+  src="https://code.jquery.com/jquery-3.5.1.js"
+  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+  crossorigin="anonymous"></script>
+<script src="script.js"></script>
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>

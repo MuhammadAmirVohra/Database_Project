@@ -74,8 +74,30 @@
                                                 <li><a href="/services">Services</a></li>
 
                                                 <li><a href="/contact">Contact</a></li>
-                                                <% if (user) {%>
+                                                <% if (user) { if(user.email.split("@")[0] == "frontdesk"){ %>
                                                     <li>
+                                                        <p>
+                                                            <a class="btn btn-primary btn-sm" style="color : white;" href = "/frontdesk">
+                                                                Front Desk
+                                                            </a>
+
+
+                                                        </p>
+                                                    </li>
+                                                    <% } else if (user.email.split("@")[0] != "frontdesk" && user.email.split("@")[1] == "royal-hotel.com"){ %>
+                                                        <li>
+                                                        <p>
+                                                            <a class="btn btn-primary btn-sm" style="color : white;" href = "/ceo">
+                                                                <%= user.name %>
+                                                            </a>
+
+
+                                                        </p>
+                                                    </li>
+
+
+                                                        <%} else {%>
+                                                        <li>
                                                         <p>
                                                             <a class="btn btn-primary btn-sm" style="color : white;" data-toggle="modal" data-target="#exampleModalCenter">
                                                                 <%= user.name %>
@@ -84,7 +106,8 @@
 
                                                         </p>
                                                     </li>
-                                                    <% } else { %>
+                                                        
+                                                        <%}}else { %>
                                                         <li>
                                                             <p><a href="/login" class="btn btn-primary btn-sm" style="color : white;">Sign In</a></p>
                                                         </li>

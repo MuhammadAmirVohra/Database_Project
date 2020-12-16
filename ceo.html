@@ -1,58 +1,363 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
+    <!-- Required meta tags -->
     <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>CEO</title>
-    <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.css" />
-  </head>
-  <body>
-    <div style = "width:400px; height:400px"><canvas id="myChart"></canvas>  </div> 
-    <script src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-    <script>
-      var ctx = document.getElementById("myChart").getContext("2d");
-      var myChart = new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-          datasets: [
-            {
-              label: "# of Votes",
-              data: [12, 19, 3, 5, 2, 3],
-              backgroundColor: [
-                "rgba(255, 99, 132, 0.2)",
-                "rgba(54, 162, 235, 0.2)",
-                "rgba(255, 206, 86, 0.2)",
-                "rgba(75, 192, 192, 0.2)",
-                "rgba(153, 102, 255, 0.2)",
-                "rgba(255, 159, 64, 0.2)",
-              ],
-              borderColor: [
-                "rgba(255, 99, 132, 1)",
-                "rgba(54, 162, 235, 1)",
-                "rgba(255, 206, 86, 1)",
-                "rgba(75, 192, 192, 1)",
-                "rgba(153, 102, 255, 1)",
-                "rgba(255, 159, 64, 1)",
-              ],
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: {
-          scales: {
-            yAxes: [
-              {
-                ticks: {
-                  beginAtZero: true,
-                },
-              },
-            ],
-          },
-        },
-      });
-    </script>
 
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="manager_style.css" />
+
+    <title>CEO</title>
+  </head>
+
+  <body>
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container-fluid ml-5">
+        <h1 class="display-4">CEO</h1>
+        <p class="lead">Muhammad Ahmed</p>
+        <div class="jumbotron-buttons">
+          <ul>
+            <li>
+              <a href="#" class="btn btn-lg btn-outline-danger">Log Out</a>
+            </li>
+            <li>
+              <a href="#" class="btn btn-lg btn-outline-danger">Home Page</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="wrapper">
+      <div class="container">
+        <div class="row"></div>
+        <div class="row">
+          <ul class="nav nav-pills mb-3 nav-fill" id="pills-tab" role="tablist">
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                id="Graphs-tab"
+                data-toggle="pill"
+                href="#Graphs"
+                role="tab"
+                aria-controls="Graphs-tab"
+                aria-selected="true"
+                >Graphs</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="Staff-tab"
+                data-toggle="pill"
+                href="#Staff"
+                role="tab"
+                aria-controls="Staff-tab"
+                aria-selected="true"
+                >All Managers</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="Hire-tab"
+                data-toggle="pill"
+                href="#Hire"
+                role="tab"
+                aria-controls="Hire-tab"
+                aria-selected="false"
+                >Add Manager Data</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="Remove-tab"
+                data-toggle="pill"
+                href="#Remove"
+                role="tab"
+                aria-controls="Remove-tab"
+                aria-selected="false"
+                >Remove Manager Data</a
+              >
+            </li>
+
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="Manager_Views-tab"
+                data-toggle="pill"
+                href="#Manager_Views"
+                role="tab"
+                aria-controls="Manager_Views-tab"
+                aria-selected="true"
+                >Invoices</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="row">
+          <div class="tab-content" id="pills-tabContent">
+            <div
+              class="tab-pane fade show active"
+              id="Graphs"
+              role="tabpanel"
+              aria-labelledby="Graphs-tab"
+            >
+              Graphs
+            </div>
+            <div
+              class="tab-pane fade"
+              id="Staff"
+              role="tabpanel"
+              aria-labelledby="Staff-tab"
+            >
+              <h1 style="text-align: center">Staff</h1>
+              <div class="invoice_table">
+                <table class="table table-sm table-light">
+                  <thead>
+                    <tr class="fixed">
+                      <th scope="col">#</th>
+                      <th scope="col">Reason</th>
+                      <th scope="col">Amount</th>
+                      <th scope="col">Department</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">1</th>
+                      <td>Mark</td>
+                      <td>Otto</td>
+                      <td>@mdo</td>
+                    </tr>
+                    <tr class="">
+                      <th scope="row">2</th>
+                      <td>Jacob</td>
+                      <td>Thornton</td>
+                      <td>@fat</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">3</th>
+                      <td colspan="2">Larry the Bird</td>
+                      <td>@twitter</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">4</th>
+                      <td colspan="2">Larry the Bird</td>
+                      <td>@twitter</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">5</th>
+                      <td colspan="2">Larry the Bird</td>
+                      <td>@twitter</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">6</th>
+                      <td colspan="2">Larry the Bird</td>
+                      <td>@twitter</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">7</th>
+                      <td colspan="2">Larry the Bird</td>
+                      <td>@twitter</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">8</th>
+                      <td colspan="2">Larry the Bird</td>
+                      <td>@twitter</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">9</th>
+                      <td colspan="2">Larry the Bird</td>
+                      <td>@twitter</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">10</th>
+                      <td colspan="2">Larry the Bird</td>
+                      <td>@twitter</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">11</th>
+                      <td colspan="2">Larry the Bird</td>
+                      <td>@twitter</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">12</th>
+                      <td colspan="2">Larry the Bird</td>
+                      <td>@twitter</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">13</th>
+                      <td colspan="2">Larry the Bird</td>
+                      <td>@twitter</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">14</th>
+                      <td colspan="2">Larry the Bird</td>
+                      <td>@twitter</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">15</th>
+                      <td colspan="2">Larry the Bird</td>
+                      <td>@twitter</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">16</th>
+                      <td colspan="2">Larry the Bird</td>
+                      <td>@twitter</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">17</th>
+                      <td colspan="2">Larry the Bird</td>
+                      <td>@twitter</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">18</th>
+                      <td colspan="2">Larry the Bird</td>
+                      <td>@twitter</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="Hire"
+              role="tabpanel"
+              aria-labelledby="Hire-tab"
+            >
+              <div class="container">
+                <form action="/register" method="post">
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputFirstName4">First Name</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="inputFirstName4"
+                        placeholder="First Name"
+                        name="fname"
+                      />
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputLastName4">Last Name</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="inputLastName4"
+                        placeholder="Last  Name"
+                        name="lname"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputEmail4">Email</label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="inputEmail4"
+                        placeholder="Email"
+                        name="email"
+                      />
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputEmail4">Salary</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="inputEmail4"
+                        placeholder="Salary"
+                        name="salary"
+                      />
+                    </div>
+                  </div>
+                  <button
+                    type="submit"
+                    class="btn btn-danger btn-lg btn-block red"
+                  >
+                    Add Employee Data
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="Remove"
+              role="tabpanel"
+              aria-labelledby="Remove-tab"
+            >
+              <div class="container">
+                <form action="/register" method="post">
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputFirstName4">Employee ID</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="inputFirstName4"
+                        placeholder="ID"
+                        name="ID"
+                      />
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputEmail4">Email</label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="inputEmail4"
+                        placeholder="Email"
+                        name="email"
+                      />
+                    </div>
+                  </div>
+                  <button
+                    type="submit"
+                    class="btn btn-danger btn-lg btn-block red"
+                  >
+                    Remove Employee Data
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="Manager_Views"
+              role="tabpanel"
+              aria-labelledby="Manager_Views-tab"
+            >
+              <div
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
+    -->
   </body>
 </html>
