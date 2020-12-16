@@ -291,8 +291,10 @@ app.post(
     function(req, res) {
         const break_email = req.user.email.split("@")
         if (break_email[1] === "royal-hotel.com") {
-            if (break_email[0] == "frontdesk") res.redirect('/frontdesk');
-            else {
+            if (break_email[0] == "frontdesk") {
+                user = req.user;
+                res.redirect('/frontdesk');
+            } else {
                 staff.findOne({ email: req.user.email }, (err, data) => {
                     if (err) {
                         console.log(err);
