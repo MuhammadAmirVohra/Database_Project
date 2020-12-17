@@ -19,8 +19,23 @@ const account = require('./db/Account');
 const staff = require('./db/Staff');
 const job = require('./db/Job');
 
+var PORT = process.env.PORT || 5000;
 
-invoice.watch().on('change', change => console.log(change));
+// const server = require('http').createServer(app);
+
+
+app.listen(PORT, () => {
+    Customer_Info = {};
+    Code = 0;
+    user = null;
+    verification = false;
+    console.log("Server Started at ", PORT);
+});
+
+invoice.watch().on('change', (change) => {
+    console.log(change);
+
+});
 
 app.use(
     require("express-session")({
@@ -52,36 +67,36 @@ mongo_DB.connection.off("error", () => {
     console.log("Database Failed to Connect");
 });
 
-// job.findOne({ Designation: "CEO" }, (err, job_data) => {
-//     if (err) {
-//         console.log(err);
-//     } else {
+job.findOne({ Designation: "CEO" }, (err, job_data) => {
+    if (err) {
+        console.log(err);
+    } else {
 
-//         staff.create({
-//             staff_name: "Syed Daniyal Hassan",
-//             salary: 1000000,
-//             job_id: job_data.id,
-//             email: "daniyal@royal-hotel.com"
+        staff.create({
+            name: "Syed Daniyal Hassan",
+            salary: 1000000,
+            job_id: job_data.id,
+            email: "daniyal@royal-hotel.com"
 
-//         }, (err, staff_data) => {
-//             if (err) {
-//                 console.log(err);
-//             } else {
-//                 console.log("CEO Data Added");
-//                 account.create({
-//                     email: "daniyal@royal-hotel.com",
-//                     password: "daniyal"
-//                 }, (err, account_data) => {
-//                     if (err) {
-//                         console.log(err);
-//                     } else {
-//                         console.log("Account Created");
-//                     }
-//                 })
-//             }
-//         });
-//     }
-// });
+        }, (err, staff_data) => {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("CEO Data Added");
+                account.create({
+                    email: "daniyal@royal-hotel.com",
+                    password: "daniyal"
+                }, (err, account_data) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log("Account Created");
+                    }
+                })
+            }
+        });
+    }
+});
 
 
 
@@ -289,6 +304,7 @@ app.post(
         failureRedirect: "/loginfailed"
     }),
     function(req, res) {
+        console.log(req.user.email);
         const break_email = req.user.email.split("@")
         if (break_email[1] === "royal-hotel.com") {
             if (break_email[0] == "frontdesk") {
@@ -593,7 +609,25 @@ app.get('/ceo', checkCEO, (req, res) => {
         .populate('department_id')
         .exec(async function(err, results) {
             invoice.find({}).populate('department_id').exec(function(err, invoices) {
-                if (err) { console.log(err); } else { res.render("ceo", { managers: results, ceo: user, invoices: invoices }); }
+                if (err) { console.log(err); } else {
+                    staff.find({ department_id: { $exists: true } }).populate('department_id').exec(function(err, data) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+
+                            res.render("ceo", {
+                                managers: results,
+                                ceo: user,
+                                invoices: invoices,
+                                staff_count: [Object.keys(data).filter((record) => data[record].department_id.dname == "Maintenance").length,
+                                    Object.keys(data).filter((record) => data[record].department_id.dname == "Finance").length,
+                                    Object.keys(data).filter((record) => data[record].department_id.dname == "General").length
+                                ]
+                            });
+
+                        }
+                    });
+                }
             });
         });
 
@@ -679,11 +713,23 @@ app.post('/delete_manager', (req, res) => {
                 if (err) {
                     console.log(err);
                 } else {
-                    staff.deleteOne({ email: req.body.email }, (err, staff_delete) => {
-                        console.log("Deleted");
-                        req.flash("success", "Data Deleted");
-                        res.redirect('/ceo');
-                    });
+                    staff.deleteMany({ manager_id: req.body.id }, (err, deleted) => {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            staff.deleteOne({ email: req.body.email }, (err, staff_delete) => {
+
+                                if (err) {
+                                    console.log(err);
+                                } else {
+
+                                    console.log("Deleted");
+                                    req.flash("success", "Data Deleted");
+                                    res.redirect('/ceo');
+                                }
+                            });
+                        }
+                    })
                 }
             });
         }
@@ -861,15 +907,6 @@ app.get('/frontdesk', CheckFrontDesk, (req, res) => {
 });
 
 
-var PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-    Customer_Info = {};
-    Code = 0;
-    user = null;
-    verification = false;
-    console.log("Server Started at ", PORT);
-});
 
 function checkVerification(req, res, next) {
     if (verification) {

@@ -14,44 +14,46 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="./style.css">
+  <!--<script src="http://www.chartjs.org/dist/2.6.0/Chart.bundle.js"></script>
+  <link rel="stylesheet" href="http://www.chartjs.org/dist/2.6.0/Chart.css" />-->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="manager_style.css" />
 
   <title>CEO</title>
 </head>
 
 <body>
-<%if(error && error.length>0){%>
-        <div class="alert alert-danger" id="danger-alert" style="text-align:center;">
-            <%=error%>
-        </div>
-        <%}if(success && success.length>0){%>
-            <div class="alert alert-success" id="success-alert" style="text-align:center;">
-                <%=success%>
-            </div>
-            <%}%>
+  <%if(error && error.length>0){%>
+  <div class="alert alert-danger" id="danger-alert" style="text-align:center;">
+    <%=error%>
+  </div>
+  <%}if(success && success.length>0){%>
+  <div class="alert alert-success" id="success-alert" style="text-align:center;">
+    <%=success%>
+  </div>
+  <%}%>
   <div class="jumbotron jumbotron-fluid">
     <div class="container-fluid ml-5">
       <h1 class="display-4">CEO</h1>
       <p class="lead"><%= ceo.name %></p>
-      <div class="jumbotron-buttons">
-        <ul>
-          <li>
-            <a href="/logout" class="btn btn-lg btn-outline-danger">Log Out</a>
-          </li>
-          <li>
-            <a href="/" class="btn btn-lg btn-outline-danger">Home Page</a>
-          </li>
-        </ul>
-      </div>
-    </div>
+  <div class="jumbotron-buttons">
+    <ul>
+      <li>
+        <a href="/logout" class="btn btn-lg btn-outline-danger">Log Out</a>
+      </li>
+      <li>
+        <a href="/" class="btn btn-lg btn-outline-danger">Home Page</a>
+      </li>
+    </ul>
+  </div>
+  </div>
   </div>
 
-  <div id="wrapper">
-    <div class="container">
-      <div class="row"></div>
+
+    <div class="container-fluid">
       <div class="row">
-        <ul class="nav nav-pills mb-3 nav-fill" id="pills-tab" role="tablist">
+        <ul class="nav nav-tabs nav-fill" id="pills-tab" role="tablist">
           <li class="nav-item">
             <a class="nav-link active" id="Graphs-tab" data-toggle="pill" href="#Graphs" role="tab"
               aria-controls="Graphs-tab" aria-selected="true">Graphs</a>
@@ -78,24 +80,58 @@
       <div class="row">
         <div class="tab-content" id="pills-tabContent">
           <div class="tab-pane fade show active" id="Graphs" role="tabpanel" aria-labelledby="Graphs-tab">
-            Graphs
+
+            <div class="container">
+              <div class="row text-center" id="canvas-holder">
+                <h2>Staff</h2>
+                <canvas id="StaffChart"></canvas>
+              </div>
+            </div>
+            <script>
+              console.log(<%=staff_count%>);
+              new Chart(document.getElementById("StaffChart"), {
+                type: "doughnut",
+                data: {
+                  labels: ["Maintenance", "Finance", "General"],
+                  datasets: [{
+                    label: "No. of Customers",
+                    data: [<%=staff_count[0]%>,<%=staff_count[1]%>,<%=staff_count[2]%>],
+                    backgroundColor: [
+                      "lightgreen",
+                      //"rgb(255, 99, 132)",
+                      "rgb(54, 162, 235)",
+                      "rgb(255, 205, 86)",
+                    ],
+                  }, ],
+                },
+                options: {
+                  title: {
+                    display: false,
+                    text: 'Staff Chart'
+                  }
+                }
+              });
+            </script>
+
+
           </div>
           <div class="tab-pane fade" id="Staff" role="tabpanel" aria-labelledby="Staff-tab">
-          <% if(managers.length == 0) {%> <h1 class = "display-4 text-center">No Managers</h1> <%} else {%>
-            
-            <h1 class = "display-4 text-center">Managers</h1>
+            <% if(managers.length == 0) {%> <h1 class="display-4 text-center">No Managers</h1> <%} else {%>
+
+            <h1 class="display-4 text-center">Managers</h1>
             <div class="invoice_table">
-            <script>
-              $(document).ready(function(){
-                $("#Manager_Search").on("keyup", function() {
-                  var value = $(this).val().toLowerCase();
-                  $("#Manager_Table tr").filter(function() {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+              <script>
+                $(document).ready(function () {
+                  $("#Manager_Search").on("keyup", function () {
+                    var value = $(this).val().toLowerCase();
+                    $("#Manager_Table tr").filter(function () {
+                      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    });
                   });
                 });
-              });
               </script>
-               <input class="form-control  Search_Bar" id="Manager_Search" type="text" style="border: 1px solid #B70907; margin: 3px;" placeholder="Search">
+              <input class="form-control  Search_Bar" id="Manager_Search" type="text"
+                style="border: 1px solid #B70907; margin: 3px;" placeholder="Search">
               <table id="Manager_Table" class="table table-sm table-light table-bordered text-center ">
                 <thead>
                   <tr class="fixed">
@@ -108,7 +144,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                <% for(var i = 0; i < managers.length; i++) { %>
+                  <% for(var i = 0; i < managers.length; i++) { %>
                   <tr>
                     <th scope="row"><%= i+1 %></th>
                     <td><%= managers[i].id %></td>
@@ -122,124 +158,132 @@
                 </tbody>
               </table>
             </div><%}%>
-          </div>
-          <div class="tab-pane fade" id="Hire" role="tabpanel" aria-labelledby="Hire-tab">
-            <div class="container form-container">
-              <form action="/addmanager" method="post">
-                <div class="form-row">
-                  <div class="form-group col-md-6">
-                    <label for="inputFirstName4">First Name</label>
-                    <input type="text" class="form-control" id="inputFirstName4" placeholder="First Name"
-                      name="fname" required/>
+            </div>
+            <div class="tab-pane fade" id="Hire" role="tabpanel" aria-labelledby="Hire-tab">
+              <div class="container form-container">
+                <form action="/addmanager" method="post">
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputFirstName4">First Name</label>
+                      <input type="text" class="form-control" id="inputFirstName4" placeholder="First Name" name="fname"
+                        required />
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputLastName4">Last Name</label>
+                      <input type="text" class="form-control" id="inputLastName4" placeholder="Last  Name" name="lname"
+                        required />
+                    </div>
                   </div>
-                  <div class="form-group col-md-6">
-                    <label for="inputLastName4">Last Name</label>
-                    <input type="text" class="form-control" id="inputLastName4" placeholder="Last  Name" name="lname" required/>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputEmail4">Email</label>
+                      <input type="email" class="form-control" id="inputEmail4" placeholder="Email" name="email"
+                        required />
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputPassword4">Password</label>
+                      <input type="password" class="form-control" id="inputPassword4" placeholder="Password" name="pass"
+                        required>
+                    </div>
                   </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-group col-md-6">
-                    <label for="inputEmail4">Email</label>
-                    <input type="email" class="form-control" id="inputEmail4" placeholder="Email" name="email" required/>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputEmail4">Salary</label>
+                      <input type="number" class="form-control" id="inputEmail4" placeholder="Salary" name="salary"
+                        required />
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="genderSelector">Department</label>
+                      <select id="genderSelector" class="form-control" name="department" required>
+                        <option selected disabled>Choose...</option>
+                        <option value="General">General</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Maintenance">Maintenance</option>
+                      </select>
+
+                    </div>
                   </div>
-                  <div class="form-group col-md-6">
-                    <label for="inputPassword4">Password</label>
-                    <input type="password" class="form-control" id="inputPassword4" placeholder="Password" name="pass" required>
-                  </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-group col-md-6">
-                    <label for="inputEmail4">Salary</label>
-                    <input type="number" class="form-control" id="inputEmail4" placeholder="Salary" name="salary" required />
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="genderSelector">Department</label>
-                    <select id="genderSelector" class="form-control" name="department" required>
-                      <option selected disabled>Choose...</option>
-                      <option value="General">General</option>
-                      <option value="Finance">Finance</option>
-                      <option value="Maintenance">Maintenance</option>
-                    </select>
+                  <button type="submit" class="btn btn-danger btn-lg btn-block red">
+                    Add Employee Data
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="Remove" role="tabpanel" aria-labelledby="Remove-tab">
+              <div class="container">
+                <form action="/delete_manager" method="post">
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputFirstName4">Employee ID</label>
+                      <input type="text" class="form-control" id="inputFirstName4" placeholder="ID" name="id"
+                        required />
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputEmail4">Email</label>
+                      <input type="email" class="form-control" id="inputEmail4" placeholder="Email" name="email"
+                        required />
+                    </div>
 
                   </div>
-                </div>
-                <button type="submit" class="btn btn-danger btn-lg btn-block red">
-                  Add Employee Data
-                </button>
-              </form>
+                  <button type="submit" class="btn btn-danger btn-lg btn-block red">
+                    Remove Employee Data
+                  </button>
+                </form>
+              </div>
             </div>
-          </div>
-          <div class="tab-pane fade" id="Remove" role="tabpanel" aria-labelledby="Remove-tab">
-            <div class="container">
-              <form action="/delete_manager" method="post">
-                <div class="form-row">
-                  <div class="form-group col-md-6">
-                    <label for="inputFirstName4">Employee ID</label>
-                    <input type="text" class="form-control" id="inputFirstName4" placeholder="ID" name="id" required/>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="inputEmail4">Email</label>
-                    <input type="email" class="form-control" id="inputEmail4" placeholder="Email" name="email" required/>
-                  </div>
-
-                </div>
-                <button type="submit" class="btn btn-danger btn-lg btn-block red">
-                  Remove Employee Data
-                </button>
-              </form>
-            </div>
-          </div>
-          <div class="tab-pane fade" id="Invoices" role="tabpanel" aria-labelledby="Invoices-tab">
-             <% if(invoices.length == 0) {%> <h1 class="display-4 text-center">No Invoice</h1> <%} else {%>
+            <div class="tab-pane fade" id="Invoices" role="tabpanel" aria-labelledby="Invoices-tab">
+              <% if(invoices.length == 0) {%> <h1 class="display-4 text-center">No Invoice</h1> <%} else {%>
               <h1 class="display-4 text-center">Invoices</h1>
               <div class="invoice_table">
-               <script>
-              $(document).ready(function(){
-                $("#Invoice_Search").on("keyup", function() {
-                  var value = $(this).val().toLowerCase();
-                  $("#Invoice_Table tr").filter(function() {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                <script>
+                  $(document).ready(function () {
+                    $("#Invoice_Search").on("keyup", function () {
+                      var value = $(this).val().toLowerCase();
+                      $("#Invoice_Table tr").filter(function () {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                      });
+                    });
                   });
-                });
-              });
-              </script>
-               <input class="form-control  Search_Bar" id="Invoice_Search" type="text" style="border: 1px solid #B70907; margin: 3px;" placeholder="Search">
-              <table id="Invoice_Table" class="table table-sm table-light table-bordered text-center ">
-                <thead>
-                  <tr class="fixed">
-                    <th scope="col">#</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Reason</th>
-                    <th scope="col">Amount</th>
-                    <th scope="col">Department</th>
-                  </tr>
-                </thead>
-                <tbody>
-                <% for(var i = 0; i < invoices.length; i++) { %>
-                  <tr <% if (invoices[i].type == "credit") { %> class = "table-success" <%} else { %> class = "table-danger" <%}%>>
-                    <th scope="row"><%= i+1 %></th>
-                    <td><%= invoices[i].date.toDateString() %></td>
-                    <td><%= invoices[i].reason %></td>
-                    <td><%= invoices[i].amount %></td>
-                    <td><%= invoices[i].department_id.dname %></td>
-                    
-                  </tr>
-                  <%}%>
+                </script>
+                <input class="form-control  Search_Bar" id="Invoice_Search" type="text"
+                  style="border: 1px solid #B70907; margin: 3px;" placeholder="Search">
+                <table id="Invoice_Table" class="table table-sm table-light table-bordered text-center ">
+                  <thead>
+                    <tr class="fixed">
+                      <th scope="col">#</th>
+                      <th scope="col">Date</th>
+                      <th scope="col">Reason</th>
+                      <th scope="col">Amount</th>
+                      <th scope="col">Department</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% for(var i = 0; i < invoices.length; i++) { %>
+                    <tr <% if (invoices[i].type == "credit") { %> class="table-success" <%} else { %>
+                      class="table-danger" <%}%>>
+                    <th scope="row"><%= i+1 %></th> <td><%= invoices[i].date.toDateString() %></td>
+                      <td><%= invoices[i].reason %></td>
+                      <td><%= invoices[i].amount %></td>
+                      <td><%= invoices[i].department_id.dname %></td>
+
+                    </tr>
+                    <%}%>
                  
                   </tbody>
                 </table>
               </div><%}%>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous">
-  </script>
-<script src="script.js"></script>
-  <!-- Option 2: Separate Popper and Bootstrap JS -->
-  <!--
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous">
+    </script>
+    <script src="script.js"></script>
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
     -->
