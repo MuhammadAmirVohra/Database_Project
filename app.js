@@ -56,7 +56,8 @@ mongo_DB.connect(
     "mongodb+srv://amir:amir@royal.naxnw.mongodb.net/royal?retryWrites=true&w=majority", {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        useCreateIndex: true
+        useCreateIndex: true,
+        useFindAndModify: false
     }
 );
 
@@ -67,36 +68,36 @@ mongo_DB.connection.off("error", () => {
     console.log("Database Failed to Connect");
 });
 
-job.findOne({ Designation: "CEO" }, (err, job_data) => {
-    if (err) {
-        console.log(err);
-    } else {
+// job.findOne({ Designation: "CEO" }, (err, job_data) => {
+//     if (err) {
+//         console.log(err);
+//     } else {
 
-        staff.create({
-            name: "Syed Daniyal Hassan",
-            salary: 1000000,
-            job_id: job_data.id,
-            email: "daniyal@royal-hotel.com"
+//         staff.create({
+//             name: "Syed Daniyal Hassan",
+//             salary: 1000000,
+//             job_id: job_data.id,
+//             email: "daniyal@royal-hotel.com"
 
-        }, (err, staff_data) => {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("CEO Data Added");
-                account.create({
-                    email: "daniyal@royal-hotel.com",
-                    password: "daniyal"
-                }, (err, account_data) => {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        console.log("Account Created");
-                    }
-                })
-            }
-        });
-    }
-});
+//         }, (err, staff_data) => {
+//             if (err) {
+//                 console.log(err);
+//             } else {
+//                 console.log("CEO Data Added");
+//                 account.create({
+//                     email: "daniyal@royal-hotel.com",
+//                     password: "daniyal"
+//                 }, (err, account_data) => {
+//                     if (err) {
+//                         console.log(err);
+//                     } else {
+//                         console.log("Account Created");
+//                     }
+//                 })
+//             }
+//         });
+//     }
+// });
 
 
 
@@ -451,17 +452,85 @@ app.post("/:id/delete", checkAuthenticated, (req, res) => {
     });
 });
 
-app.post("/:id/update", checkAuthenticated, (req, res) => {
-    console.log(req.params.id);
-    // Customer.findByIdAndDelete(req.params.id, (err,Data)=>
-    // {
-    //         req.flash("success", "Account Deleted");
-    //         res.redirect('/logout');
-    // });
-    res.redirect("update", {
-        user: user
+app.get("/:id/update", checkAuthenticated, (req, res) => {
+
+    Customer.findOne({ _id: req.params.id }, (err, user_data) => {
+        if (err) {
+            console.log(err);
+        } else {
+            account.findOne({ email: user_data.email }, (err, account_data) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log(user_data);
+                    console.log(account_data);
+                    res.render("update", {
+                        user: user_data,
+                        account: account_data
+                    });
+                }
+            });
+        }
+
+
+
     });
+
 });
+
+
+app.post("/:id/update", checkAuthenticated, (req, res) => {
+
+    Customer.findOne({ _id: req.params.id }, (err, old_data) => {
+        if (err) {
+            console.log(err);
+            req.flash("error", err.message);
+            res.redirect("/" + req.params.id + "/update");
+        } else {
+            Customer.findOneAndUpdate({ _id: req.params.id }, {
+                name: req.body.name,
+                email: req.body.email,
+                phone: req.body.phone,
+                address: req.body.address,
+                cnic: req.body.cnic,
+                credit_card: req.body.credit_card
+
+
+            }, (err, user_data) => {
+                if (err) {
+                    console.log(err);
+                    req.flash("error", err.message);
+                    res.redirect("/" + req.params.id + "/update");
+                } else {
+                    account.findOneAndUpdate({ email: old_data.email }, {
+                        email: req.body.email,
+                        password: req.body.pass
+
+                    }, (err, account_data) => {
+                        if (err) {
+                            console.log(err);
+                            req.flash("error", err.message);
+                            res.redirect("/" + req.params.id + "/update");
+                        } else {
+
+                            res.redirect('/');
+                        }
+                    });
+                }
+
+
+
+            });
+        }
+    });
+
+
+
+
+
+});
+
+
 
 app.post("/booking", checkAuthenticated, (req, res) => {
 
@@ -615,15 +684,108 @@ app.get('/ceo', checkCEO, (req, res) => {
                             console.log(err);
                         } else {
 
-                            res.render("ceo", {
-                                managers: results,
-                                ceo: user,
-                                invoices: invoices,
-                                staff_count: [Object.keys(data).filter((record) => data[record].department_id.dname == "Maintenance").length,
-                                    Object.keys(data).filter((record) => data[record].department_id.dname == "Finance").length,
-                                    Object.keys(data).filter((record) => data[record].department_id.dname == "General").length
-                                ]
+                            // invoice.find({ type: "credit" }, { amount: 1, _id: 0, date: 1 }, (err, credit_data) => {
+                            //     if (err) {
+                            //         console.log(err);
+                            //     } else {
+                            //         console.log(credit_data);
+
+                            //         invoice.find({ type: "debit" }, { amount: 1, _id: 0, date: 1 }, (err, debit_data) => {
+                            //             if (err) {
+                            //                 console.log(err);
+                            //             } else {
+                            //                 console.log(debit_data);
+
+
+                            //                 res.render("ceo", {
+                            //                     managers: results,
+                            //                     ceo: user,
+                            //                     invoices: invoices,
+                            //                     staff_count: [Object.keys(data).filter((record) => data[record].department_id.dname == "Maintenance").length,
+                            //                         Object.keys(data).filter((record) => data[record].department_id.dname == "Finance").length,
+                            //                         Object.keys(data).filter((record) => data[record].department_id.dname == "General").length
+                            //                     ],
+                            //                     credit: credit_data,
+                            //                     debit_data: debit_data
+                            //                 });
+                            //             }
+                            //         });
+
+
+
+
+                            //     }
+                            // });
+
+
+                            invoice.find({}, { amount: 1, type: 1, _id: 0, date: 1 }).sort('-date').exec((err, invoice_data) => {
+
+
+
+                                if (err) {
+                                    console.log(err);
+                                } else {
+
+
+                                    credit = {}
+                                    debit = {}
+                                        // console.log(data[0].date.format('MM/DD/YYYY'))
+                                    invoice_data.forEach((record) => {
+
+                                        var c = 0;
+                                        var d = 0;
+                                        if (record.type == "credit") {
+                                            if (!credit[moment(record.date).format('LL')])
+                                                credit[moment(record.date).format('LL')] = 0;
+
+                                            credit[moment(record.date).format('LL')] += record.amount;
+                                        } else {
+                                            if (!debit[moment(record.date).format('LL')])
+                                                debit[moment(record.date).format('LL')] = 0;
+
+                                            debit[moment(record.date).format('LL')] += record.amount;
+                                        }
+
+                                    });
+
+                                    dates = Object.keys(credit).concat(Object.keys(debit))
+                                    Object.keys(credit).forEach((record) => { if (!debit[record]) debit[record] = 0; });
+                                    Object.keys(debit).forEach((record) => { if (!credit[record]) credit[record] = 0; });
+
+                                    // console.log(credit);
+                                    // console.log(debit);
+
+                                    // dates1 = []
+                                    // data.forEach(function(d) {
+                                    //     dates1.push(moment(d.date).format('LL'));
+                                    // });
+
+                                    // console.log(dates1.sort()[0].toString());
+
+                                    res.render("ceo", {
+                                        managers: results,
+                                        ceo: user,
+                                        invoices: invoices,
+                                        staff_count: [Object.keys(data).filter((record) => data[record].department_id.dname == "Maintenance").length || 0,
+                                            Object.keys(data).filter((record) => data[record].department_id.dname == "Finance").length,
+                                            Object.keys(data).filter((record) => data[record].department_id.dname == "General").length
+                                        ],
+                                        credit: credit,
+                                        debit: debit,
+                                        dates: dates.sort()
+                                    });
+                                }
+
+
+
+
+
                             });
+
+
+
+
+
 
                         }
                     });
@@ -908,6 +1070,12 @@ app.get('/frontdesk', CheckFrontDesk, (req, res) => {
 
 
 
+
+
+
+
+
+
 function checkVerification(req, res, next) {
     if (verification) {
         return next();
@@ -981,3 +1149,81 @@ function CheckManager(req, res, next) {
         res.redirect('/login');
     }
 }
+
+
+// invoice.aggregate([{
+//     $group: {
+//         _id: { "date": date.toDateString(), "type": "$type" },
+//         count: { $sum: "$amount" }
+//     }
+// }], (err, data) => {
+//     if (err) {
+//         console.log(err);
+//     } else {
+//         console.log(data);
+//     }
+// });
+
+
+// invoice.find({}, { amount: 1, type: 1, _id: 0, date: 1 }).sort('-date').exec((err, data) => {
+
+
+
+//     if (err) {
+//         console.log(err);
+//     } else {
+
+
+//         credit = {}
+//         debit = {}
+//             // console.log(data[0].date.format('MM/DD/YYYY'))
+//         data.forEach((record) => {
+
+//             var c = 0;
+//             var d = 0;
+//             if (record.type == "credit") {
+//                 if (!credit[moment(record.date).format('LL')])
+//                     credit[moment(record.date).format('LL')] = 0;
+
+//                 credit[moment(record.date).format('LL')] += record.amount;
+//             } else {
+//                 if (!debit[moment(record.date).format('LL')])
+//                     debit[moment(record.date).format('LL')] = 0;
+
+//                 debit[moment(record.date).format('LL')] += record.amount;
+//             }
+
+//         });
+
+//         dates = Object.keys(credit).concat(Object.keys(debit))
+//         Object.keys(credit).forEach((record) => { if (!debit[record]) debit[record] = 0; });
+//         Object.keys(debit).forEach((record) => { if (!credit[record]) credit[record] = 0; });
+
+//         // console.log(credit);
+//         // console.log(debit);
+
+//         // dates1 = []
+//         // data.forEach(function(d) {
+//         //     dates1.push(moment(d.date).format('LL'));
+//         // });
+
+//         // console.log(dates1.sort()[0].toString());
+//         res.render("ceo", {
+//             managers: results,
+//             ceo: user,
+//             invoices: invoices,
+//             staff_count: [Object.keys(data).filter((record) => data[record].department_id.dname == "Maintenance").length,
+//                 Object.keys(data).filter((record) => data[record].department_id.dname == "Finance").length,
+//                 Object.keys(data).filter((record) => data[record].department_id.dname == "General").length
+//             ],
+//             credit: credit,
+//             debit: debit,
+//             dates: dates
+//         });
+//     }
+
+
+
+
+
+// });

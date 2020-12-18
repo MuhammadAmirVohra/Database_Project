@@ -112,13 +112,13 @@ form {
     width: 99%;
 }
 
-#canvas-holder {
+.canvas-holder {
     background-color: #ffffff;
     /* position: absolute; */
-    width: 50%;
-    height: 50%;
+    width: 75%;
+    height: 75%;
     /* margin: 60 auto; */
     /* border: 1px solid black; */
     /* padding: 20px; */
-    float: left;
+    /* float: left; */
 }

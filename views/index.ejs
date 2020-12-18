@@ -82,9 +82,9 @@
                             <form action="/<%=user._id%>/delete" method="post">
                                 <button type="submit" class="btn btn-outline-danger">Delete Account</button>
                             </form>
-                            <form action="/<%=user._id%>/update" method="post">
-                                <button type="submit" class="btn btn-outline-secondary mr-auto">Update Account</button>
-                            </form>
+
+                            <a href="/<%=user._id%>/update" class="btn btn-outline-secondary mr-auto">Update Account</a>
+
                             <a href="/logout" class="btn btn-primary ">Logout</a>
                         </div>
                     </div>
@@ -419,6 +419,6 @@
                         </div>
                     </div>
                 </div>
-              
+
 
                 <%- include("./Partials/Footer") %>

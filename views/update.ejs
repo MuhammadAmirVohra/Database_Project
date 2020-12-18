@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/bootstrap-4.5.3-dist/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="/bootstrap-4.5.3-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/style.css">
+
+    <title>Edit</title>
+</head>
+
+<body class="signin-body">
+    <%if(error && error.length>0){%>
+        <div class="alert alert-danger" id="danger-alert" style="text-align:center;">
+            <%=error%>
+        </div>
+        <%}if(success && success.length>0){%>
+            <div class="alert alert-success" id="success-alert" style="text-align:center;">
+                <%=success%>
+            </div>
+            <%}%>
+                <div class="container-flex signup-container">
+                    <div class="row">
+                        <div class="col-sm-3"></div>
+                        <div class="col-md-6">
+
+
+                            <div class="card signin-card">
+                                <div class="card-body">
+                                    <form action="/<%=user.id%>/update" method="post">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="inputFirstName4">Name</label>
+                                                <input type="text" value="<%=user.name%>" class="form-control" placeholder="First Name" name="name">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="phone">Phone Number</label>
+                                                <input type="text" value="<%=user.phone%>" class="form-control" placeholder="Phone Number" name="phone">
+                                            </div>
+
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="inputEmail4">Email</label>
+                                                <input type="email" value="<%= user.email%>" class="form-control" placeholder="Email" name="email">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="inputPassword4">Password</label>
+                                                <input type="password" value="<%= account.password %>" class="form-control" placeholder="Password" name="pass">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label for="inputAddress">Address</label>
+                                                <input type="text" value="<%=user.address%>" class="form-control" placeholder="Address" name="address">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="cnic">CNIC</label>
+                                                <input type="text" value="<%=user.cnic%>" class="form-control" placeholder="XXXXX-XXXXXXX-X" name="cnic">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="Credit">Credit Card</label>
+                                                <input type="text" class="form-control" value="<%=user.credit_card%>" placeholder="XXXX XXXX XXXX XXXX" name="credit_card">
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-lg">Update</button>
+                                    </form>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <!--<div class="col-sm-1"></div>
+          
+        </div>-->
+                    </div>
+
+                    <!-- Optional JavaScript -->
+                    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+                    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+                    <script src="/bootstrap-4.5.3-dist/js/bootstrap.min.js"></script>
+                    <!-- jQuery library -->
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+                    <!-- Latest compiled JavaScript -->
+                    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+                    <script src="/script.js"></script>
+
+</body>
+
+</html>
