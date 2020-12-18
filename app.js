@@ -429,10 +429,30 @@ app.get("/logout", checkAuthenticated, (req, res) => {
 
 app.post("/:id/delete", checkAuthenticated, (req, res) => {
     console.log(req.params.id);
-    Customer.findByIdAndDelete(req.params.id, (err, Data) => {
-        req.flash("success", "Account Deleted");
-        res.redirect("/logout");
+    Customer.findOne({ _id: req.params.id }, (err, customer_data) => {
+        if (err) {
+            console.log(err);
+            req.flash("error", err.message);
+            res.redirect('/');
+        } else {
+            account.findOneAndDelete({ email: customer_data.email }, (err, delete_account) => {
+                if (err) {
+                    console.log(err);
+                    req.flash("error", err.message);
+                    res.redirect('/');
+                } else {
+                    Customer.findByIdAndDelete(req.params.id, (err, Data) => {
+                        req.flash("success", "Account Deleted");
+                        res.redirect("/logout");
+                    });
+                }
+
+            });
+        }
     });
+
+
+
 });
 
 app.get("/:id/update", checkAuthenticated, (req, res) => {

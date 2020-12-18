@@ -64,8 +64,8 @@
                             <header id="fh5co-header-section">
                                 <div class="container">
                                     <div class="nav-header">
-                                        <a href="#" class="js-fh5co-nav-toggle fh5co-nav-toggle"><i></i></a>
-                                        <h1 id="fh5co-logo"><a href="index.html">Royal</a></h1>
+                                        <!-- <a href="#" class="js-fh5co-nav-toggle fh5co-nav-toggle"><i></i></a> -->
+                                        <a href="index.html"><img src="/Logo.png" alt="logo" width="150px"></a>
                                         <nav id="fh5co-menu-wrap" role="navigation">
                                             <ul class="sf-menu" id="fh5co-primary-menu">
                                                 <li><a class="active" href="/">Home</a></li>
@@ -76,7 +76,7 @@
                                                 <% if (user) { if(user.email.split("@")[0] == "frontdesk"){ %>
                                                     <li>
                                                         <p>
-                                                            <a class="btn btn-primary btn-sm" style="color : white;" href = "/frontdesk">
+                                                            <a class="btn btn-primary btn-sm" style="color : white;" href="/frontdesk">
                                                                 Front Desk
                                                             </a>
 
@@ -85,32 +85,32 @@
                                                     </li>
                                                     <% } else if (user.email.split("@")[0] != "frontdesk" && user.email.split("@")[1] == "royal-hotel.com"){ %>
                                                         <li>
-                                                        <p>
-                                                            <a class="btn btn-primary btn-sm" style="color : white;" href = "/ceo">
-                                                                <%= user.name %>
-                                                            </a>
+                                                            <p>
+                                                                <a class="btn btn-primary btn-sm" style="color : white;" href="/ceo">
+                                                                    <%= user.name %>
+                                                                </a>
 
 
-                                                        </p>
-                                                    </li>
+                                                            </p>
+                                                        </li>
 
 
                                                         <%} else {%>
-                                                        <li>
-                                                        <p>
-                                                            <a class="btn btn-primary btn-sm" style="color : white;" data-toggle="modal" data-target="#exampleModalCenter">
-                                                                <%= user.name %>
-                                                            </a>
+                                                            <li>
+                                                                <p>
+                                                                    <a class="btn btn-primary btn-sm" style="color : white;" data-toggle="modal" data-target="#exampleModalCenter">
+                                                                        <%= user.name %>
+                                                                    </a>
 
 
-                                                        </p>
-                                                    </li>
-                                                        
-                                                        <%}}else { %>
-                                                        <li>
-                                                            <p><a href="/login" class="btn btn-primary btn-sm" style="color : white;">Sign In</a></p>
-                                                        </li>
-                                                        <%}%>
+                                                                </p>
+                                                            </li>
+
+                                                            <%}}else { %>
+                                                                <li>
+                                                                    <p><a href="/login" class="btn btn-primary btn-sm" style="color : white;">Sign In</a></p>
+                                                                </li>
+                                                                <%}%>
                                             </ul>
                                         </nav>
                                     </div>

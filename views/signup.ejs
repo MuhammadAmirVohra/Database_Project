@@ -17,14 +17,14 @@
 
 <body class="signin-body">
     <%if(error && error.length>0){%>
-    <div class="alert alert-danger" id="danger-alert" style="text-align:center;">
-        <%=error%>
-    </div>
-    <%}if(success && success.length>0){%>
-    <div class="alert alert-success" id="success-alert" style="text-align:center;">
-        <%=success%>
-    </div>
-    <%}%>
+        <div class="alert alert-danger" id="danger-alert" style="text-align:center;">
+            <%=error%>
+        </div>
+        <%}if(success && success.length>0){%>
+            <div class="alert alert-success" id="success-alert" style="text-align:center;">
+                <%=success%>
+            </div>
+            <%}%>
                 <div class="container-flex signup-container">
                     <div class="row">
                         <div class="col-sm-3"></div>
@@ -33,68 +33,74 @@
 
                             <div class="card signin-card">
                                 <div class="card-body">
-                                    <form action="/register" method="post">
-                                        <div class="form-row">
-                                            <div class="form-group col-md-6">
-                                                <label for="inputFirstName4">First Name</label>
-                                                <input type="text" class="form-control"  placeholder="First Name" name="fname">
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="inputLastName4">Last Name</label>
-                                                <input type="text" class="form-control"  placeholder="Last  Name" name="lname">
-                                            </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <a href="/"><img src="Logo1.png" alt="hotel image" class="img-fluid signin-img"></a>
+                                            <h1 class="display-4 text-center">Register Your Account</h1>
                                         </div>
-                                        <div class="form-row">
-                                            <div class="form-group col-md-6">
-                                                <label for="inputEmail4">Email</label>
-                                                <input type="email" class="form-control" placeholder="Email" name="email">
+                                        <form action="/register" method="post">
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="inputFirstName4">First Name</label>
+                                                    <input type="text" class="form-control" placeholder="First Name" name="fname" required>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="inputLastName4">Last Name</label>
+                                                    <input type="text" class="form-control" placeholder="Last  Name" name="lname" required>
+                                                </div>
                                             </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="inputPassword4">Password</label>
-                                                <input type="password" class="form-control"  placeholder="Password" name="pass">
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="inputEmail4">Email</label>
+                                                    <input type="email" class="form-control" placeholder="Email" name="email" required>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="inputPassword4">Password</label>
+                                                    <input type="password" class="form-control" placeholder="Password" name="pass" required>
+                                                </div>
                                             </div>
-                                        </div>
-                                       
-                                        <div class="form-row">
-                                            <div class="form-group col-md-6">
-                                                <label for="genderSelector">Gender</label>
-                                                <select id="genderSelector" class="form-control" name="gender">
-                                                <option selected>Choose...</option>
+
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="genderSelector">Gender</label>
+                                                    <select id="genderSelector" class="form-control" name="gender" required>
+                                                <option selected disabled>Choose...</option>
                                                 <option value="Male">Male</option>
                                                 <option value="Female">Female</option>
                                                 <option value="Other">other</option>
                                                 </select>
 
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="phone">Phone Number</label>
-                                                <input type="text" class="form-control"  placeholder="Phone Number" name="phone">
-                                            </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="phone">Phone Number</label>
+                                                    <input type="text" class="form-control" placeholder="Phone Number" name="phone" required>
+                                                </div>
 
 
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                                <label for="inputAddress">Address</label>
-                                                <input type="text" class="form-control" placeholder="Address" name="address">
                                             </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="form-group col-md-6">
-                                                <label for="cnic">CNIC</label>
-                                                <input type="text" class="form-control"  placeholder="XXXXX-XXXXXXX-X" name="cnic">
+                                            <div class="form-row">
+                                                <div class="form-group col-md-12">
+                                                    <label for="inputAddress">Address</label>
+                                                    <input type="text" class="form-control" placeholder="Address" name="address" required>
+                                                </div>
                                             </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="Credit">Credit Card</label>
-                                                <input type="text" class="form-control"  placeholder="XXXX XXXX XXXX XXXX" name="credit_card">
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="cnic">CNIC</label>
+                                                    <input type="text" class="form-control" placeholder="XXXXX-XXXXXXX-X" name="cnic" required>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="Credit">Credit Card</label>
+                                                    <input type="text" class="form-control" placeholder="XXXX XXXX XXXX XXXX" name="credit_card" required>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary btn-lg">Sign up</button>
-                                    </form>
+                                            <button type="submit" class="btn btn-primary btn-lg btn-block">Sign up</button>
+                                            <!-- <a href="/login" class="btn btn-lg btn-secondary" style="float:right;">Back</a> -->
+                                        </form>
+                                    </div>
                                 </div>
+
                             </div>
-
-
                         </div>
                         <!--<div class="col-sm-1"></div>
           
