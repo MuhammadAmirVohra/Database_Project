@@ -21,8 +21,6 @@ const job = require('./db/Job');
 
 var PORT = process.env.PORT || 5000;
 
-// const server = require('http').createServer(app);
-
 
 app.listen(PORT, () => {
     Customer_Info = {};
@@ -206,21 +204,6 @@ mongo_DB.connection.off("error", () => {
 
 // });
 
-// var Customer_Schema = mongo_DB.Schema({
-
-//     email: { type: String, required: true, unique: true, lowercase: true },
-//     name: String,
-//     password: { type: String, required: true},
-//     address : String,
-//     city:String,
-//     zip_code: Number,
-//     gender: String
-
-// });
-
-// var Customer = mongo_DB.model('Customer', Customer_Schema);
-
-// Customer_Schema.plugin(pass);
 
 function randNum(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
@@ -684,40 +667,6 @@ app.get('/ceo', checkCEO, (req, res) => {
                             console.log(err);
                         } else {
 
-                            // invoice.find({ type: "credit" }, { amount: 1, _id: 0, date: 1 }, (err, credit_data) => {
-                            //     if (err) {
-                            //         console.log(err);
-                            //     } else {
-                            //         console.log(credit_data);
-
-                            //         invoice.find({ type: "debit" }, { amount: 1, _id: 0, date: 1 }, (err, debit_data) => {
-                            //             if (err) {
-                            //                 console.log(err);
-                            //             } else {
-                            //                 console.log(debit_data);
-
-
-                            //                 res.render("ceo", {
-                            //                     managers: results,
-                            //                     ceo: user,
-                            //                     invoices: invoices,
-                            //                     staff_count: [Object.keys(data).filter((record) => data[record].department_id.dname == "Maintenance").length,
-                            //                         Object.keys(data).filter((record) => data[record].department_id.dname == "Finance").length,
-                            //                         Object.keys(data).filter((record) => data[record].department_id.dname == "General").length
-                            //                     ],
-                            //                     credit: credit_data,
-                            //                     debit_data: debit_data
-                            //                 });
-                            //             }
-                            //         });
-
-
-
-
-                            //     }
-                            // });
-
-
                             invoice.find({}, { amount: 1, type: 1, _id: 0, date: 1 }).sort('-date').exec((err, invoice_data) => {
 
 
@@ -751,16 +700,6 @@ app.get('/ceo', checkCEO, (req, res) => {
                                     dates = Object.keys(credit).concat(Object.keys(debit))
                                     Object.keys(credit).forEach((record) => { if (!debit[record]) debit[record] = 0; });
                                     Object.keys(debit).forEach((record) => { if (!credit[record]) credit[record] = 0; });
-
-                                    // console.log(credit);
-                                    // console.log(debit);
-
-                                    // dates1 = []
-                                    // data.forEach(function(d) {
-                                    //     dates1.push(moment(d.date).format('LL'));
-                                    // });
-
-                                    // console.log(dates1.sort()[0].toString());
 
                                     res.render("ceo", {
                                         managers: results,
@@ -1162,68 +1101,4 @@ function CheckManager(req, res, next) {
 //     } else {
 //         console.log(data);
 //     }
-// });
-
-
-// invoice.find({}, { amount: 1, type: 1, _id: 0, date: 1 }).sort('-date').exec((err, data) => {
-
-
-
-//     if (err) {
-//         console.log(err);
-//     } else {
-
-
-//         credit = {}
-//         debit = {}
-//             // console.log(data[0].date.format('MM/DD/YYYY'))
-//         data.forEach((record) => {
-
-//             var c = 0;
-//             var d = 0;
-//             if (record.type == "credit") {
-//                 if (!credit[moment(record.date).format('LL')])
-//                     credit[moment(record.date).format('LL')] = 0;
-
-//                 credit[moment(record.date).format('LL')] += record.amount;
-//             } else {
-//                 if (!debit[moment(record.date).format('LL')])
-//                     debit[moment(record.date).format('LL')] = 0;
-
-//                 debit[moment(record.date).format('LL')] += record.amount;
-//             }
-
-//         });
-
-//         dates = Object.keys(credit).concat(Object.keys(debit))
-//         Object.keys(credit).forEach((record) => { if (!debit[record]) debit[record] = 0; });
-//         Object.keys(debit).forEach((record) => { if (!credit[record]) credit[record] = 0; });
-
-//         // console.log(credit);
-//         // console.log(debit);
-
-//         // dates1 = []
-//         // data.forEach(function(d) {
-//         //     dates1.push(moment(d.date).format('LL'));
-//         // });
-
-//         // console.log(dates1.sort()[0].toString());
-//         res.render("ceo", {
-//             managers: results,
-//             ceo: user,
-//             invoices: invoices,
-//             staff_count: [Object.keys(data).filter((record) => data[record].department_id.dname == "Maintenance").length,
-//                 Object.keys(data).filter((record) => data[record].department_id.dname == "Finance").length,
-//                 Object.keys(data).filter((record) => data[record].department_id.dname == "General").length
-//             ],
-//             credit: credit,
-//             debit: debit,
-//             dates: dates
-//         });
-//     }
-
-
-
-
-
 // });
