@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "royalbot-oivy",
+  "private_key_id": "4e1507925fe1ba38e9c6e4421fbdc5792ef9cae8",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCQVZuIv2uL4LY2\n70jr/D2dTrTFhEKM2SuUzOn6AvWdrIU9BZZFFxNKbJPz5gwzThq2uAhHrEPnpou1\nK9xPPf49+P9nVKSNDgSeLxjUFVoUVn1ZORKJqptUHo6bpGb6VPFESwSSO0iH/Fx+\neijQJ9psVWdHBzHWtqB3dhOo5ihvTB/7LIzrzUgEfzVkmbImFnR+/laAPpMoGUq9\nO/hC9uiawBmJSGGos442TALdNzi8Qkoood1AzHX/F2g6XK1jW2G9gVnLLq9s0fRv\nipfRfK4XI4mxqedUuMnb76YBmd6EZzC8vJDiMSE7odnzG93Hsb0CbmMSidYJ1hsZ\nsv6EUh3PAgMBAAECggEAOHRjq69Dv6ibXQ1nNnapGviIGKHM7g6bz03/Tr0NmSi7\nzMx8pHWMJBYoIMQgjYjFRibhhjdJMDiieLC5MX2MDm1waNhgrJOJFt5RFdNsMnxJ\n9zYtnA9RRivVl+dMKCpFXHMDTLdHfXkmLIpXoGOWOb2F8fBMfDFevps+wVeVBULo\n90zjhj7gnPVjMnDy20N2hS82/MkpJLlUMDE9GtP67lEFEtv9l/s8jFPQnhaqPwOO\nUa9WXBpTTIO6kxR8obboR16QGpm5NmIqeEI+8UVCL6LCGKAtRcPBOrUzjln3vVfJ\nQ1S0APt6Xv2fxtrjKYzTWPyVtnvghaOFs4ytONEygQKBgQDBPEbqaEv3UmS82+ex\nN0YggW8G0/org4/A5oZWcUrVLUXgY/QztwYs0f4UXdBvrx0U+8HdPoPQ9Ojf7Qo8\nlhgyiD9BnXHOPEjb53cPm3NP/yAdcci+xitEaZpdS99Dl1v9eVOnnoQpOYQ8lTFa\nmWcQuHucbJjovj+iLI3MN5SCLwKBgQC/NyijOK40/oB+aGqvdX3hN2fXiFA/9OLF\nUxHvwT4+gekpd8TJDu4b8sqi9X3pSq+CvWgPExMaDlNz11QAXn6BdL7Vg/woUGZA\n6eYzRMuD3+seKM60NkKCzjTxv/XJIaia6hvXF3WmEoivUXdJCJ8xGCe3+h0JzV/9\nx3i3xH9WYQKBgCiG7NSi1TPk2u3lLR202wdcPh3vfWt85zxs3MXqcuhs21fpfsEN\n5MSnsiMxXdLepjnNZ2ZwgxLjGqhEPb5hOGf4vVOUota/PASq8gSa9L9VYbXrNFAW\nneJ2R4LDs+qoJwntVUc1bsB6qKpQHA7FV6FhH8O53wQJSq1HrOGk0ofPAoGAXRdb\nf2s+1Kn6oI/xMI7Aw/6XXYUNnLV6GZsBpnmr9f6FJx0Z/tB3979SC9f8frFPlRTl\nLkGZERxcYI86ZBuc9yWBKq3g+zd5MK0u11Lsyb0f2EUBrRalds0xVWihHlR2o0TK\nXQMc0cdAKCo/Kp0580rRO25W6MjFrOWJzd2qKMECgYEAlhSF8X5EJyWO4NFi2MGf\npYqkkoo4djxBxJ8xxt8O2iWTuakObsAi3aDTfWY8iLKDnWNgrTH9Qt5zFEESfcte\n1SZBLgIddrSzYt//y3gKtxK3ZQO3JGmSYmsCFLyRXkD0qhciT1vqNXar8XV/k/j/\nyMNpSvNCUFkiOsv0pq0HPI0=\n-----END PRIVATE KEY-----\n",
+  "client_email": "royal-hotel@royalbot-oivy.iam.gserviceaccount.com",
+  "client_id": "103312612032915041600",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/royal-hotel%40royalbot-oivy.iam.gserviceaccount.com"
+}

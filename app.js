@@ -18,17 +18,92 @@ const department = require("./db/Department");
 const account = require('./db/Account');
 const staff = require('./db/Staff');
 const job = require('./db/Job');
+const dialogflow = require("@google-cloud/dialogflow")
+const dotenv = require("dotenv");
+const socketio = require("socket.io");
+const uuid = require("uuid");
+const http = require('http');
+const { default: validator } = require("validator");
 
 var PORT = process.env.PORT || 5000;
 
-
-app.listen(PORT, () => {
+dotenv.config({path:__dirname+"/config/config.env"})
+const server = http.createServer(app);
+server.listen(PORT, () => {
     Customer_Info = {};
     Code = 0;
     user = null;
     verification = false;
+    console.log("socket io")
     console.log("Server Started at ", PORT);
 });
+
+const io = socketio(server);
+
+io.on("connection", function (socket) {
+  console.log("a user connected");
+
+  socket.on("chat message", (message) => {
+    console.log(message);
+//process.env.PROJECT_ID
+    const callapibot = async (projectId ="royalbot-oivy" ) => {
+      try {
+        const sessionId = uuid.v4();
+        const sessionClient = new dialogflow.SessionsClient({
+          keyFilename: __dirname+"/royalbot-oivy-4e1507925fe1.json",
+        });
+        console.log("working")
+        const sessionPath = sessionClient.projectAgentSessionPath(
+          projectId,
+          sessionId
+        );
+        const request = {
+          session: sessionPath,
+          queryInput: {
+            text: {
+              text: message,
+              languageCode: "en-US",
+            },
+          },
+        };
+        // Error is here 
+        const responses = await sessionClient.detectIntent(request);
+
+        console.log("Detected intent");
+        const result = responses[0].queryResult.fulfillmentText;
+        //const x = responses[0].queryResult.fulfillmentMessages[2].linkOutSuggestion
+        //console.log(x)
+        console.log("complete result :: ",result)
+        if(validator.isURL(result))
+        {
+            socket.emit("bot url reply",result)
+            console.log("url")
+        }
+        else
+            socket.emit("bot reply", result);
+        console.log(result);
+        if (result.intent) {
+          console.log(`  Intent: ${result.intent.displayName}`);
+        } else {
+          console.log(`  No intent matched.`);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    callapibot();
+  });
+})
+
+
+
+
+
+
+
+
+
 
 invoice.watch().on('change', (change) => {
     console.log(change);
@@ -58,6 +133,7 @@ mongo_DB.connect(
         useFindAndModify: false
     }
 );
+
 
 mongo_DB.connection.on("connected", () => {
     console.log("Database Connected ! ");
@@ -248,6 +324,11 @@ app.use(function(req, res, next) {
     res.locals.success = req.flash("success");
     next();
 });
+
+app.get("/bot",(req,res)=>{
+    res.render("bot")
+})
+
 
 app.get("/", (req, res) => {
     // console.log(user);
