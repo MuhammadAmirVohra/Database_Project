@@ -13,6 +13,7 @@ recognition.lang = "en-US"; //en-US
 recognition.interimResults = false;
 
 btn.addEventListener("click", () => {
+  console.log("recognition start")
   recognition.start();
 });
 
