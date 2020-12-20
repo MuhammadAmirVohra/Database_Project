@@ -27,7 +27,7 @@ const { default: validator } = require("validator");
 
 var PORT = process.env.PORT || 5000;
 
-dotenv.config({path:__dirname+"/config/config.env"})
+dotenv.config({ path: __dirname + "/config/config.env" })
 const server = http.createServer(app);
 server.listen(PORT, () => {
     Customer_Info = {};
@@ -40,63 +40,60 @@ server.listen(PORT, () => {
 
 const io = socketio(server);
 
-io.on("connection", function (socket) {
-  console.log("a user connected");
+io.on("connection", function(socket) {
+    console.log("a user connected");
 
-  socket.on("chat message", (message) => {
-    console.log(message);
-//process.env.PROJECT_ID
-    const callapibot = async (projectId ="royalbot-oivy" ) => {
-      try {
-        const sessionId = uuid.v4();
-        const sessionClient = new dialogflow.SessionsClient({
-          keyFilename: __dirname+"/royalbot-oivy-4e1507925fe1.json",
-        });
-        console.log("working")
-        const sessionPath = sessionClient.projectAgentSessionPath(
-          projectId,
-          sessionId
-        );
-        const request = {
-          session: sessionPath,
-          queryInput: {
-            text: {
-              text: message,
-              languageCode: "en-US",
-            },
-          },
+    socket.on("chat message", (message) => {
+        console.log(message);
+        //process.env.PROJECT_ID
+        const callapibot = async(projectId = "royalbot-oivy") => {
+            try {
+                const sessionId = uuid.v4();
+                const sessionClient = new dialogflow.SessionsClient({
+                    keyFilename: __dirname + "/royalbot-oivy-4e1507925fe1.json",
+                });
+                console.log("working")
+                const sessionPath = sessionClient.projectAgentSessionPath(
+                    projectId,
+                    sessionId
+                );
+                const request = {
+                    session: sessionPath,
+                    queryInput: {
+                        text: {
+                            text: message,
+                            languageCode: "en-US",
+                        },
+                    },
+                };
+                // Error is here 
+                const responses = await sessionClient.detectIntent(request);
+
+                console.log("Detected intent");
+                const result = responses[0].queryResult.fulfillmentText;
+                //const x = responses[0].queryResult.fulfillmentMessages[2].linkOutSuggestion
+                //console.log(x)
+                console.log("complete result :: ", result)
+                gur = "bot reply"
+                if (validator.isURL(result)) {
+                    gur = "bot url reply";
+                } else {
+                    gur = "bot reply"
+                }
+                socket.emit(gur, result);
+                console.log(result);
+                if (result.intent) {
+                    console.log(`  Intent: ${result.intent.displayName}`);
+                } else {
+                    console.log(`  No intent matched.`);
+                }
+            } catch (error) {
+                console.log(error);
+            }
         };
-        // Error is here 
-        const responses = await sessionClient.detectIntent(request);
 
-        console.log("Detected intent");
-        const result = responses[0].queryResult.fulfillmentText;
-        //const x = responses[0].queryResult.fulfillmentMessages[2].linkOutSuggestion
-        //console.log(x)
-        console.log("complete result :: ",result)
-        gur ="bot reply"
-        if(validator.isURL(result))
-        {
-            gur = "bot url reply" ; 
-        }
-        else
-        {
-           gur ="bot reply"
-        }
-        socket.emit(gur, result);
-        console.log(result);
-        if (result.intent) {
-          console.log(`  Intent: ${result.intent.displayName}`);
-        } else {
-          console.log(`  No intent matched.`);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    callapibot();
-  });
+        callapibot();
+    });
 })
 
 
@@ -328,7 +325,7 @@ app.use(function(req, res, next) {
     next();
 });
 
-app.get("/bot",(req,res)=>{
+app.get("/bot", (req, res) => {
     res.render("bot")
 })
 
@@ -618,7 +615,7 @@ app.post("/:id/update", checkAuthenticated, (req, res) => {
 });
 
 
-
+/*
 app.post("/booking", checkAuthenticated, (req, res) => {
 
     var start = moment(req.body.start, "M/D/YYYY").add(1, "days");
@@ -756,6 +753,176 @@ app.post("/booking", checkAuthenticated, (req, res) => {
 
     }
 });
+*/
+
+
+
+room_info = {};
+
+
+app.post("/booking", checkAuthenticated, (req, res) => {
+
+    var start = moment(req.body.start, "M/D/YYYY").add(1, "days");
+    var end = moment(req.body.end, "M/D/YYYY").add(1, "days");
+    var diffDays = end.diff(start, "days");
+
+    console.log(diffDays);
+
+    if (diffDays <= 0) {
+
+        console.log("error");
+        req.flash("error", "Invalid Date");
+        res.redirect("/");
+
+    } else {
+        room_category.findOne({
+            name: req.body.category
+        }, (err, category_data) => {
+            if (err) {
+                console.log(err);
+                req.flash("error", err.message);
+                res.redirect("/");
+            } else {
+                console.log(category_data._id);
+                room.find({
+                    category_id: category_data.id
+                }, (err, categorized_room) => {
+                    if (err) {
+                        console.log(err);
+                        req.flash("error", err.message);
+                        res.redirect("/");
+                    } else {
+                        console.log("Room Recieved of ID :" + categorized_room[0].id);
+                        reservation.find({}, (err, all_reservation) => {
+                            if (err) {
+                                console.log(err);
+                                req.flash("error", err.message);
+                                res.redirect("/");
+                            } else {
+                                // console.log("Reservation Data Recieved");
+                                reserved = [];
+                                for (var i = 0; i < all_reservation.length; i++) {
+                                    if (
+                                        moment(start).isBetween(
+                                            all_reservation[i].start,
+                                            all_reservation[i].end
+                                        ) ||
+                                        moment(all_reservation[i].end).isBetween(start, end)
+                                    ) {
+                                        reserved.push(all_reservation[i]);
+                                    }
+                                }
+                                var desired_room;
+                                for (i = 0; i < categorized_room.length; i++) {
+                                    flag = true;
+                                    flag_break = false;
+                                    for (var j = 0; j < reserved.length; j++) {
+                                        if (categorized_room[i].id == reserved[j].room_id) {
+                                            flag = false;
+                                            break;
+                                        }
+                                    }
+                                    if (flag) {
+                                        desired_room = categorized_room[i];
+                                        break;
+                                    }
+
+                                }
+
+                                // console.log("One time " + desired_room);
+
+                                if (desired_room) {
+
+                                    room_info = {
+                                        diffDays: diffDays,
+                                        category_data: category_data,
+                                        desired_room: desired_room,
+                                        start: moment(start).format('LL'),
+                                        end: moment(end).format('LL')
+                                    }
+                                    console.log(room_info);
+                                    res.render('room_info', { room_info: room_info });
+
+
+                                } else {
+                                    req.flash("error", "Hotel is Full ! All rooms are booked !");
+                                    res.redirect('/');
+                                }
+
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+
+    }
+});
+
+
+
+app.post('/booked', checkAuthenticated, (req, res) => {
+
+
+    department.findOne({
+            dname: "Room Booking"
+        },
+        (err, room_book_department) => {
+            if (err) {
+                console.log(err);
+                req.flash("error", err.message);
+                res.redirect("/");
+                //   break;
+            } else {
+                // console.log("Room Booking Department ID : " + room_book_department.id);
+                invoice.create({
+                        date: moment(Date.now()),
+                        amount: parseInt(room_info.category_data.price) * room_info.diffDays,
+                        reason: "User with ID : " +
+                            user.id +
+                            " have booked room No." +
+                            room_info.desired_room.room_number,
+                        type: "credit",
+                        department_id: room_book_department.id,
+                    },
+                    (err, invoice_data) => {
+                        if (err) {
+                            console.log(err);
+                            req.flash("error", err.message);
+                            res.redirect("/");
+                            //   break;
+                        } else {
+                            reservation.create({
+                                room_id: room_info.desired_room.id,
+                                customer_id: user.id,
+                                start: room_info.start,
+                                end: room_info.end,
+                                invoice_id: invoice_data.id,
+                            }, (err, reservation_done) => {
+                                if (err) {
+                                    console.log(err);
+                                    req.flash("error", err.message);
+                                    res.redirect("/");
+                                    // break;
+                                } else {
+                                    // console.log("Added");
+                                    // flag_break = true
+                                    req.flash("success", "Room is booked for " + room_info.diffDays + " Days");
+                                    res.redirect("/");
+                                }
+
+                            });
+                        }
+                    }
+                );
+            }
+        }
+    );
+
+});
+
+
 
 
 
@@ -801,9 +968,14 @@ app.get('/ceo', checkCEO, (req, res) => {
 
                                     });
 
-                                    dates = Object.keys(credit).concat(Object.keys(debit))
+                                    // var dates = Object.keys(credit).concat(Object.keys(debit))
+                                    var dates = [...new Set([...Object.keys(credit), ...Object.keys(debit)])]
                                     Object.keys(credit).forEach((record) => { if (!debit[record]) debit[record] = 0; });
                                     Object.keys(debit).forEach((record) => { if (!credit[record]) credit[record] = 0; });
+
+                                    console.log(dates);
+                                    console.log(credit);
+                                    console.log(debit);
 
                                     res.render("ceo", {
                                         managers: results,

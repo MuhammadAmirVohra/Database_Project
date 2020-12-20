@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="bootstrap-4.5.3-dist/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="bootstrap-4.5.3-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./style.css">
+    <title>Sign In</title>
+</head>
+
+<body class="signin-body">
+    <%if(error && error.length>0){%>
+        <div class="alert alert-danger" id="danger-alert" style="text-align:center;">
+            <%=error%>
+        </div>
+        <%}if(success && success.length>0){%>
+            <div class="alert alert-success" id="success-alert" style="text-align:center;">
+                <%=success%>
+            </div>
+            <%}%>
+
+                <div class="container signin-container">
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col-8">
+                            <div class="card signin-card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <a href="/"><img src="Logo1.png" alt="hotel image" class="img-fluid signin-img"></a>
+                                        </div>
+                                        <div class="col-sm-6">
+
+                                        <div class = "container info">
+                                            <%=room_info.category_data.name%> Room price : <span><%= room_info.category_data.price %></span><br>
+                                            Room No. <span><%= room_info.desired_room.room_number %></span><br>
+                                            Booking Starts from :  <span><%= room_info.start %></span><br>
+                                            Booking Ends : <span><%= room_info.end %></span><br>
+                                            Room will booked for <span><%= room_info.diffDays %></span> Day<%if(room_info.diffDays > 1){%>s<%}%>.<br> 
+                                            Total Price : <span><%=( parseInt(room_info.category_data.price) * room_info.diffDays)%></span>
+                                            <br><br>
+                                            Are you sure ?
+                                        </div>
+
+                                                <form class="signin-form" action="/booked" method="post">
+                                                    <!-- <div class="form-group">
+                            <input type="email" class="form-control" id="emailInput" placeholder="Email" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" id="passwordInput" placeholder="Password" name="password" required>
+                        </div> -->
+                                                    <button type="submit" class="btn btn-primary signin-btn">Yes</button>
+                                                    <a href='/' class="btn btn-secondary btn-block btn-lg signin-btn">Back to Home</a>
+                                                    
+                                                    <div class="col-sm-6">
+
+                                                    </div>
+                                                    <!--
+<div class="custom-control custom-checkbox my-1 mr-sm-2">
+<input type="checkbox" class="custom-control-input" id="customControlInline">
+<label class="custom-control-label" for="customControlInline">Remember Me.<a href="#"> Need Help?</a></label>
+</div>
+-->
+                                                </form>
+
+                                                                        <!-- <a href="/register" class="create_new_account">Create Account</a> -->
+
+                                        </div>
+
+                                    </div>
+                                    <!--
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="g-recaptcha recaptcha" data-sitekey="domain_nane" data-theme="light" data-size="normal" data-image="image"></div>
+              
+                   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+                </div>-->
+
+
+
+                                </div>
+
+
+
+                                <div class="col"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Optional JavaScript; choose one of the two! -->
+
+                    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+                    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+                    <script src="bootstrap-4.5.3-dist/js/bootstrap.min.js"></script>
+                    <script src="script.js"></script>
+                    <!-- Option 2: jQuery, Popper.js, and Bootstrap JS
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+    -->
+</body>
+
+</html>
