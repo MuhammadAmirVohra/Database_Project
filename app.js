@@ -74,13 +74,16 @@ io.on("connection", function (socket) {
         //const x = responses[0].queryResult.fulfillmentMessages[2].linkOutSuggestion
         //console.log(x)
         console.log("complete result :: ",result)
+        gur ="bot reply"
         if(validator.isURL(result))
         {
-            socket.emit("bot url reply",result)
-            console.log("url")
+            gur = "bot url reply" ; 
         }
         else
-            socket.emit("bot reply", result);
+        {
+           gur ="bot reply"
+        }
+        socket.emit(gur, result);
         console.log(result);
         if (result.intent) {
           console.log(`  Intent: ${result.intent.displayName}`);
