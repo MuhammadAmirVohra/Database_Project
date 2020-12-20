@@ -91,3 +91,7 @@ html {
   .fa-github::before {
     content: "\f09b";
   }
+
+  .x{
+    padding: 25px;
+  }
