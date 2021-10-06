@@ -126,7 +126,7 @@ app.use(
 );
 app.use(express.static(__dirname + "/public"));
 mongo_DB.connect(
-    "mongodb+srv://amir:amir@royal.naxnw.mongodb.net/royal?retryWrites=true&w=majority", {
+    "mongodb+srv://amir:amir@royal.naxnw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true,
